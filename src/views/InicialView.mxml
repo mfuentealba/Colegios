@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="998" height="566">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup x="20" y="10" width="311" height="93">
+		<s:Label fontSize="20" fontWeight="bold" text="CORPORACION EDUCACIONAL"/>
+		<s:Label fontSize="20" text="FORMANDO FUTURO"/>
+		<s:Label fontSize="15" text="COLEGIO SAINT HENRY"/>
+	</s:VGroup>
+	<s:VGroup left="300" right="300" top="200" bottom="100" horizontalCenter="0">
+		<s:HGroup width="100%" height="100%">
+			<s:Button label="MOVIMIENTOS" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+			<s:Button label="CONTRATOS" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+			
+		</s:HGroup>
+		<s:HGroup width="100%" height="100%">
+			<s:Button label="REMUNERACIONES" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+			<s:Button label="INVENTARIO" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+		</s:HGroup>
+		<s:HGroup width="100%" height="100%">
+			<s:Button label="RENDICION DE CUENTAS" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+			<s:Button label="PROCESOS ESTADISTICOS" width="100%" height="100%" skinClass="assets.skins.BtnMenu"/>
+		</s:HGroup>
+	</s:VGroup>
+	<s:Label y="147" fontSize="25" fontWeight="bold" horizontalCenter="0"
+			 text="S I S T E M A   D E   C U E N T A S   I N T E R N A S"/>
+</s:Group>

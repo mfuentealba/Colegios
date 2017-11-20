@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1082" height="574">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:DataGrid left="5" right="5" top="150" bottom="29" requestedRowCount="4">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="fec_mvto" headerText="Fecha"></s:GridColumn>
+				<s:GridColumn dataField="descripcion" headerText="Glosa"></s:GridColumn>
+				<s:GridColumn dataField="tipo_documento" headerText="Tipo Doc"></s:GridColumn>
+				<s:GridColumn dataField="nro_doc" headerText="N° Documento"></s:GridColumn>
+				<s:GridColumn headerText="Ing. Dev."></s:GridColumn>
+				<s:GridColumn headerText="Gastos"></s:GridColumn>
+				<s:GridColumn headerText="Pagos"></s:GridColumn>
+				<s:GridColumn headerText="Deuda Mes"></s:GridColumn>
+				<s:GridColumn dataField="dataField3" headerText="Saldo Caja"></s:GridColumn>
+				<s:GridColumn dataField="dataField1" headerText="Deuda Acum."></s:GridColumn>
+				<s:GridColumn dataField="dataField2" headerText="Resultado"></s:GridColumn>
+				<s:GridColumn dataField="dataField2" headerText="Fuente Financiera"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+		
+	</s:DataGrid>
+</s:Group>
