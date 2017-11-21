@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" title="Ingreso de COmpromiso">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:VGroup x="99" y="21" width="200" height="200">
+		<s:HGroup width="200" height="23">
+			<s:Label text="Fecha Compromiso"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Descripción"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Tipo"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+		<s:HGroup width="200" height="23">
+			<s:Label text="Label"/>
+			<mx:DateField/>
+		</s:HGroup>
+	</s:VGroup>
+</s:Panel>
