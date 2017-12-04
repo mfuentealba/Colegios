@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="522" title="Ingreso de Movimiento" close="fnCerrar(event)">
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.MovimientoEvent;
+			
+			import modelo.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import vo.MovimientoVO;
+			[Bindable] private var arrYears:Array = [{label: 2016, data: 2016}, {label: 2017, data: 2017}, {label: 2018, data: 2018}, {label: 2019, data: 2019}, {label: 2020, data: 2020}];
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] public var movVO:MovimientoVO = new MovimientoVO();
+			public var fnPost:Function;
+			
+			protected function fnCerrar(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnGrabarMov(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var evGrabarMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.CREAR, fnCreado, movVO);
+				Controller.getInstance().dispatchEvent(evGrabarMov);
+			}
+			
+			
+			protected function fnCreado(obj:*):void{
+				fnPost.call(null);
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			protected function fnIngresarProveedor(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:PopProveedorIng = new PopProveedorIng();
+				PopUpManager.addPopUp(pop, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(pop);
+			}
+			
+			public function set fnMonto(val:*):void{
+				movVO.monto = int(val);
+			}
+			
+			
+			public function set fnNroDoc(val:*):void{
+				movVO.nro_doc = int(val);
+			}
+			
+			
+			public function set fnProveedor(val:*):void{
+				movVO.id_proveedor = int(val);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Binding source="txtGlosa.text" destination="movVO.glosa" twoWay="true"/>
+	<fx:Binding source="dfFecMov.text" destination="movVO.fec_mvto" twoWay="true"/>
+	<fx:Binding source="ddTipoMov.selectedItem.id" destination="movVO.tipo_movimiento" twoWay="true"/>
+	<fx:Binding source="ddTipoDoc.selectedItem.codigo" destination="movVO.tipo_documento" twoWay="true"/>
+	<fx:Binding source="txtDocto.text" destination="fnNroDoc"/>
+	<fx:Binding source="cbProveedor.selectedItem.id" destination="fnProveedor"/>
+	<fx:Binding source="ddFuenteFinanciera.selectedItem.id" destination="movVO.id_fuente_financiera" twoWay="true"/>
+	<fx:Binding source="txtMonto.text" destination="fnMonto"/>
+	<fx:Binding source="txtCodCuenta.text" destination="movVO.cod_cuenta" twoWay="true"/>
+	<fx:Binding source="txtCodContable.text" destination="movVO.cod_contable" twoWay="true"/>
+	
+	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="10" paddingRight="10">
+		<s:Group width="100%" height="23">
+			<s:Label text="Año" verticalCenter="0"/>
+			<s:DropDownList id="ddYear" width="155" right="0" dataProvider="{new ArrayCollection(arrYears)}"/>
+		</s:Group>
+		<s:Group width="100%" height="51">
+			<s:Label text="Glosa"/>
+			<s:TextArea id="txtGlosa" width="157" height="46" right="0"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Fecha Movimiento" verticalCenter="0"/>
+			<mx:DateField id="dfFecMov" width="155" right="0" formatString="DD-MM-YYYY"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Tipo Movimiento" verticalCenter="0"/>
+			<s:DropDownList id="ddTipoMov" width="155" right="0" labelField="descripcion" dataProvider="{modelApp.arrTipoMovimiento}"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Tipo Documento" verticalCenter="0"/>
+			<s:DropDownList id="ddTipoDoc" width="155" right="0" dataProvider="{modelApp.arrTipoDocumento}" labelField="codigo"/>
+		</s:Group>
+		
+		<s:Group width="100%" height="23">
+			<s:Label text="N° de Documento" verticalCenter="0"/>
+			<s:TextInput id="txtDocto" width="155" right="0"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Proveedor" verticalCenter="0"/>
+			<s:ComboBox id="cbProveedor" width="109" right="46" dataProvider="{modelApp.arrProveedor}" labelField="rut"/>
+			<s:Button label="+" right="0" width="40" click="fnIngresarProveedor(event)"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Fuente financiera" verticalCenter="0"/>
+			<s:DropDownList id="ddFuenteFinanciera" width="155" right="0" dataProvider="{modelApp.arrFinanciamiento}" labelField="nombre"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
+			<s:Label text="Monto" verticalCenter="0"/>
+			<s:TextInput id="txtMonto" width="155" right="0"/>
+		</s:Group>
+		
+				
+		<s:Group width="100%" height="23">
+			<s:Label text="Cod Cuenta" verticalCenter="0"/>
+			<s:TextInput id="txtCodCuenta" width="155" right="0"/>
+		</s:Group>
+		
+		<s:Group width="100%" height="23">
+			<s:Label text="Cod contable" verticalCenter="0"/>
+			<s:TextInput id="txtCodContable" width="155" right="0"/>
+		</s:Group>
+		<s:Group width="100%" height="50">
+			<s:Button label="Grabar" width="50%" left="0" height="50" click="fnGrabarMov(event)"/>
+			
+		</s:Group>
+	</s:VGroup>
+</s:TitleWindow>

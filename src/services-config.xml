@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services-config>
+  <services>
+    <service id="amfphp-flashremoting-service"
+        class="flex.messaging.services.RemotingService"
+        messageTypes="flex.messaging.messages.RemotingMessage">
+      
+      <destination id="TipoMovimientoService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.TipoMovimientoService</source>
+        </properties>
+      </destination>
+      
+      <destination id="TipoDocumentoService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.TipoDocumentoService</source>
+        </properties>
+      </destination>
+      
+      <destination id="TipoDocumentoVO">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.TipoDocumentoVO</source>
+        </properties>
+      </destination>
+      
+      <destination id="ProveedorService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.ProveedorService</source>
+        </properties>
+      </destination>
+      
+      
+      <destination id="ProveedorVO">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.ProveedorVO</source>
+        </properties>
+      </destination>
+      
+      <destination id="MovimientoService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.MovimientoService</source>
+        </properties>
+      </destination>
+      
+      
+      <destination id="MovimientoVO">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.MovimientoVO</source>
+        </properties>
+      </destination>
+      
+      
+      <destination id="GenericDestination">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>*</source>
+        </properties>
+      </destination>
+    </service>
+    
+    
+  </services>
+
+  <channels>
+    <channel-definition id="my-amf" class="mx.messaging.channels.AMFChannel">
+      <!-- <endpoint uri="http://172.16.240.79:8080/webOrb/Weborb/index.php" class="flex.messaging.endpoints.AMFEndpoint"/>  -->
+      <endpoint uri="http://localhost:9999/webOrb/Weborb/index.php" class="flex.messaging.endpoints.AMFEndpoint"/>
+    </channel-definition>
+    
+  </channels>
+
+</services-config>

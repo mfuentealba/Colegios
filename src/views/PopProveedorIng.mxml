@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="400" height="210" title="Nuevo Proveedor" close="fnCerrar(event)">
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.ProveedoresEvent;
+			
+			import modelo.ModelApp;
+			
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import vo.ProveedorVO;
+			
+			[Bindable]public var prov:ProveedorVO = new ProveedorVO();
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			protected function fnCerrar(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnGuardar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				var evIngresar:ProveedoresEvent = new ProveedoresEvent(ProveedoresEvent.CREAR_PROVEEDORES, prov);
+				evIngresar.callback = fnResult; 
+				Controller.getInstance().dispatchEvent(evIngresar);
+				
+			}
+			
+			private function fnResult(obj:*):void{
+				modelApp.arrProveedor.addItem(obj);
+				modelApp.objProveedor[obj.id + ''] = obj;
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	<fx:Binding source="txtRut.text" destination="prov.rut" twoWay="true"/>
+	<fx:Binding source="txtNombre.text" destination="prov.nombre" twoWay="true"/>
+	<s:Form left="20" right="20" top="5" height="119">
+		<s:FormItem label="Rut">
+			<s:TextInput id="txtRut"/>
+		</s:FormItem>
+		<s:FormItem label="Nombre">
+			<s:TextInput id="txtNombre"/>
+		</s:FormItem>
+	</s:Form>
+	<s:Button y="136" width="113" height="31" label="Guardar" fontWeight="bold" horizontalCenter="0" click="fnGuardar(event)"/>
+</s:TitleWindow>

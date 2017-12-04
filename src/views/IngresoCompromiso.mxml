@@ -1,50 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" title="Ingreso de COmpromiso">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300" title="Ingreso de Compromiso">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<s:VGroup x="99" y="21" width="200" height="200">
+	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="10" paddingRight="10">
 		<s:HGroup width="200" height="23">
 			<s:Label text="Fecha Compromiso"/>
 			<mx:DateField/>
 		</s:HGroup>
 		<s:HGroup width="200" height="23">
 			<s:Label text="Descripción"/>
-			<mx:DateField/>
+			<s:TextInput/>
 		</s:HGroup>
 		<s:HGroup width="200" height="23">
-			<s:Label text="Tipo"/>
-			<mx:DateField/>
+			<s:Label text="Monto"/>
+			<s:TextInput/>
 		</s:HGroup>
 		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
+			<s:Label text="Cuotas"/>
+			<s:TextInput/>
+		</s:HGroup>
+		
+		<s:HGroup width="200" height="23">
+			<s:Label text="N° Documento"/>
+			<s:TextInput/>
 		</s:HGroup>
 		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
-		</s:HGroup>
-		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
-		</s:HGroup>
-		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
-		</s:HGroup>
-		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
-		</s:HGroup>
-		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
-		</s:HGroup>
-		<s:HGroup width="200" height="23">
-			<s:Label text="Label"/>
-			<mx:DateField/>
+			<s:Button label="Grabar" width="100"/>
+			<s:Button width="100" label="Ingresar Pago"/>
 		</s:HGroup>
 	</s:VGroup>
 </s:Panel>
