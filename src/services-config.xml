@@ -51,6 +51,25 @@
         </properties>
       </destination>
       
+      <destination id="FinanciamientoService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.FinanciamientoService</source>
+        </properties>
+      </destination>
+      
+      
+      <destination id="FinanciamientoVO">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.FinanciamientoVO</source>
+        </properties>
+      </destination>
+      
       <destination id="MovimientoService">
         <channels>
           <channel ref="my-amf"/>

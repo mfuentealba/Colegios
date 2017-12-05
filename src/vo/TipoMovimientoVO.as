@@ -1,5 +1,6 @@
-package
+package vo
 {
+	[Bindable] 
 	[RemoteClass(alias="Weborb.ContaColegio.TipoMovimientoVO")]
 	public class TipoMovimientoVO
 	{

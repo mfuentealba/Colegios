@@ -9,6 +9,7 @@
 		<![CDATA[
 			import controlador.Controller;
 			
+			import events.FinanciamientoEvent;
 			import events.ProveedoresEvent;
 			import events.TipoDocumentoEvent;
 			import events.TipoMovimientoEvent;
@@ -30,6 +31,9 @@
 				
 				var evTipoDocEvent:TipoDocumentoEvent = new TipoDocumentoEvent(TipoDocumentoEvent.LISTAR);
 				Controller.getInstance().dispatchEvent(evTipoDocEvent);
+				
+				var evFinanciamiento:FinanciamientoEvent = new FinanciamientoEvent(FinanciamientoEvent.LISTAR);
+				Controller.getInstance().dispatchEvent(evFinanciamiento);
 			}
 			
 		]]>

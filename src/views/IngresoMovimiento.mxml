@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="522" title="Ingreso de Movimiento" close="fnCerrar(event)">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="522" title="Ingreso de Movimiento" close="fnCerrar(event)" creationComplete="fnIni(event)">
 	<fx:Script>
 		<![CDATA[
 			import controlador.Controller;
@@ -12,13 +12,19 @@
 			
 			import mx.collections.ArrayCollection;
 			import mx.core.FlexGlobals;
+			import mx.events.CalendarLayoutChangeEvent;
 			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
 			
 			import vo.MovimientoVO;
 			[Bindable] private var arrYears:Array = [{label: 2016, data: 2016}, {label: 2017, data: 2017}, {label: 2018, data: 2018}, {label: 2019, data: 2019}, {label: 2020, data: 2020}];
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
-			[Bindable] public var movVO:MovimientoVO = new MovimientoVO();
+			[Bindable] public var movVO:MovimientoVO;
+			public var editar:Boolean;
 			public var fnPost:Function;
 			
 			protected function fnCerrar(event:CloseEvent):void
@@ -29,8 +35,19 @@
 			
 			protected function fnGrabarMov(event:MouseEvent):void
 			{
-				// TODO Auto-generated method stub
-				var evGrabarMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.CREAR, fnCreado, movVO);
+				var mov:MovimientoVO = new MovimientoVO();
+				mov.id = movVO.id;
+				mov.glosa = txtGlosa.text;
+				mov.fec_mvto = dfFecMov.text;
+				mov.tipo_movimiento = ddTipoMov.selectedItem.id;
+				mov.tipo_documento = ddTipoDoc.selectedItem.codigo;
+				mov.nro_doc = int(txtDocto.text);
+				mov.id_proveedor = int(cbProveedor.selectedItem.id);
+				mov.id_fuente_financiera = ddFuenteFinanciera.selectedItem.id;
+				mov.monto = int(txtMonto.text);
+				mov.cod_cuenta = txtCodCuenta.text;
+				mov.cod_contable = txtCodContable.text;
+				var evGrabarMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.CREAR, fnCreado, mov);
 				Controller.getInstance().dispatchEvent(evGrabarMov);
 			}
 			
@@ -49,35 +66,42 @@
 				PopUpManager.centerPopUp(pop);
 			}
 			
-			public function set fnMonto(val:*):void{
-				movVO.monto = int(val);
+			
+			
+			
+			
+			protected function fnIni(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(!movVO){
+					movVO = new MovimientoVO();
+					
+				} else {
+					editar = true;
+					txtGlosa.text = movVO.glosa;
+					dfFecMov.text = movVO.fec_mvto;
+					ddTipoMov.selectedItem = modelApp.objTipoMovimiento[movVO.tipo_movimiento];
+					ddTipoDoc.selectedItem = modelApp.objTipoDocumento[movVO.tipo_documento];
+					txtDocto.text = movVO.nro_doc + '';
+					cbProveedor.selectedItem = modelApp.objProveedor[movVO.id_proveedor];
+					ddFuenteFinanciera.selectedItem = modelApp.objFinanciamiento[movVO.id_fuente_financiera];
+					txtMonto.text = movVO.monto + '';
+					txtCodCuenta.text = movVO.cod_cuenta;
+					txtCodContable.text = movVO.cod_contable;
+				}
+				
+				
 			}
 			
 			
-			public function set fnNroDoc(val:*):void{
-				movVO.nro_doc = int(val);
-			}
 			
 			
-			public function set fnProveedor(val:*):void{
-				movVO.id_proveedor = int(val);
-			}
 			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
-	<fx:Binding source="txtGlosa.text" destination="movVO.glosa" twoWay="true"/>
-	<fx:Binding source="dfFecMov.text" destination="movVO.fec_mvto" twoWay="true"/>
-	<fx:Binding source="ddTipoMov.selectedItem.id" destination="movVO.tipo_movimiento" twoWay="true"/>
-	<fx:Binding source="ddTipoDoc.selectedItem.codigo" destination="movVO.tipo_documento" twoWay="true"/>
-	<fx:Binding source="txtDocto.text" destination="fnNroDoc"/>
-	<fx:Binding source="cbProveedor.selectedItem.id" destination="fnProveedor"/>
-	<fx:Binding source="ddFuenteFinanciera.selectedItem.id" destination="movVO.id_fuente_financiera" twoWay="true"/>
-	<fx:Binding source="txtMonto.text" destination="fnMonto"/>
-	<fx:Binding source="txtCodCuenta.text" destination="movVO.cod_cuenta" twoWay="true"/>
-	<fx:Binding source="txtCodContable.text" destination="movVO.cod_contable" twoWay="true"/>
 	
 	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="10" paddingRight="10">
 		<s:Group width="100%" height="23">
@@ -106,13 +130,17 @@
 			<s:TextInput id="txtDocto" width="155" right="0"/>
 		</s:Group>
 		<s:Group width="100%" height="23">
-			<s:Label text="Proveedor" verticalCenter="0"/>
+			<s:Label text="Rut Proveedor" verticalCenter="0"/>
 			<s:ComboBox id="cbProveedor" width="109" right="46" dataProvider="{modelApp.arrProveedor}" labelField="rut"/>
 			<s:Button label="+" right="0" width="40" click="fnIngresarProveedor(event)"/>
 		</s:Group>
 		<s:Group width="100%" height="23">
+			<s:Label text="Nombre Proveedor" verticalCenter="0"/>
+			<s:Label text="{cbProveedor.selectedItem.nombre}" verticalCenter="0" right="0"/>
+		</s:Group>
+		<s:Group width="100%" height="23">
 			<s:Label text="Fuente financiera" verticalCenter="0"/>
-			<s:DropDownList id="ddFuenteFinanciera" width="155" right="0" dataProvider="{modelApp.arrFinanciamiento}" labelField="nombre"/>
+			<s:DropDownList id="ddFuenteFinanciera" width="155" right="0" dataProvider="{modelApp.arrFinanciamiento}" labelField="descripcion"/>
 		</s:Group>
 		<s:Group width="100%" height="23">
 			<s:Label text="Monto" verticalCenter="0"/>

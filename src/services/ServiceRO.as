@@ -36,7 +36,12 @@ package services
 			return rmtObj;
 		}
 		
-	
+		public static function fnRmtObjFinanciamiento():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("GenericDestination");
+			rmtObj.source = 'Weborb.ContaColegio.FinanciamientoService';
+			rmtObj.showBusyCursor = true;
+			return rmtObj;
+		}
 		
 		public static function fnFault(ev:FaultEvent):void{
 			Alert.show("Error en servicio de datos", 'ERROR');

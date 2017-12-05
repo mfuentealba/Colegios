@@ -54,7 +54,7 @@ package listeners
 		}
 		
 		private static function fnDict(item:*, index:int, arr:Array):void{
-			modelApp.objTipoDocumento[item.id + ''] = item;
+			modelApp.objTipoDocumento[item.codigo + ''] = item;
 		}
 		
 		public static function fault(info:Object):void

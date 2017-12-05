@@ -2,6 +2,7 @@ package controlador
 {
 	import com.adobe.serialization.json.JSON;
 	
+	import events.FinanciamientoEvent;
 	import events.MovimientoEvent;
 	import events.ProveedoresEvent;
 	import events.TipoDocumentoEvent;
@@ -11,6 +12,7 @@ package controlador
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
+	import listeners.FinanciamientoListener;
 	import listeners.MovimientoListener;
 	import listeners.ProveedorListener;
 	import listeners.TipoDocumentoListener;
@@ -56,6 +58,7 @@ package controlador
 			addEventListenerNew(TipoDocumentoEvent.LISTAR, TipoDocumentoListener);
 			addEventListenerNew(MovimientoEvent.LISTAR, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.CREAR, MovimientoListener);
+			addEventListenerNew(FinanciamientoEvent.LISTAR, FinanciamientoListener);
 		}	
 		
 		private function despachar(evento:*):void{
