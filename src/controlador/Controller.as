@@ -58,7 +58,11 @@ package controlador
 			addEventListenerNew(TipoDocumentoEvent.LISTAR, TipoDocumentoListener);
 			addEventListenerNew(MovimientoEvent.LISTAR, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.CREAR, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.CREAR_SALDO, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.LISTAR_FORMA_PAGO, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.ELIMINAR, MovimientoListener);
 			addEventListenerNew(FinanciamientoEvent.LISTAR, FinanciamientoListener);
+			
 		}	
 		
 		private function despachar(evento:*):void{

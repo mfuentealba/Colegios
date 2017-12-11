@@ -17,6 +17,8 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.MovimientoVO;
+	
 	
 	
 	public class MovimientoListener //implements IBaseListener
@@ -39,6 +41,20 @@ package listeners
 					rmtObjMovimiento.crearMovimiento(evento.movVO);
 					
 					break;
+				case MovimientoEvent.CREAR_SALDO:
+					rmtObjMovimiento.crearMovimientoSaldo(evento.movVO);
+					
+					break;
+				
+				case MovimientoEvent.ELIMINAR:
+					rmtObjMovimiento.deleteMovimiento(evento.movVO);
+					
+					break;
+				
+				case MovimientoEvent.LISTAR_FORMA_PAGO:
+					rmtObjMovimiento.fnFormaPago();
+					
+					break;
 				
 			}
 		}
@@ -48,19 +64,38 @@ package listeners
 			switch(data.token.message['operation']){
 				case MovimientoEvent.LISTAR:
 					modelApp.arrMovimiento = new ArrayCollection(data.result as Array);
+					modelApp.saldoCaja = 0;
 					//var obj:Object = data.result;
 					modelApp.arrMovimiento.source.forEach(fnDict);
 					break;
 				case MovimientoEvent.CREAR:
 					evento.callback.call(null, data.result);
 					break;
-				
+				case MovimientoEvent.ELIMINAR:
+					evento.callback.call(null, data.result);
+					break;
+				case MovimientoEvent.CREAR_SALDO:
+					evento.callback.call(null, data.result);
+					break;
+				case MovimientoEvent.LISTAR_FORMA_PAGO:
+					modelApp.arrFormaPago = new ArrayCollection(data.result as Array);
+					modelApp.arrMovimiento.source.forEach(fnDictFormaPago);
+					break;
 			}
 			//delete this;
 		}
 		
-		private static function fnDict(item:*, index:int, arr:Array):void{
+		private static function fnDict(item:MovimientoVO, index:int, arr:Array):void{
 			modelApp.objMovimiento[item.id + ''] = item;
+			if(item.tipo_movimiento == '2'){
+				modelApp.saldoCaja += item.monto;
+				item.saldoCaja = modelApp.saldoCaja;
+			}
+			
+		}
+		
+		private static function fnDictFormaPago(item:*, index:int, arr:Array):void{
+			modelApp.objFormaPago[item.id + ''] = item;
 		}
 		
 		public static function fault(info:Object):void

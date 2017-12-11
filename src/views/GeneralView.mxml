@@ -15,6 +15,7 @@
 			
 			import mx.controls.Alert;
 			import mx.core.FlexGlobals;
+			import mx.events.CloseEvent;
 			import mx.managers.PopUpManager;
 			
 			import vo.MovimientoVO;
@@ -42,11 +43,122 @@
 			private function fnBuscar():void{
 				var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, null);
 				Controller.getInstance().dispatchEvent(ev);
+				
 			}
 			
 			private function set fnSelectedMov(val:*):void{
 				selectedMov = val;
 			}
+			
+			protected function fnEliminar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(!selectedMov){
+					Alert.show("Debe seleccionar un registro de la grilla para poder editarlo", 'Atención');
+					return;
+				} else {
+					Alert.show("¿Está seguro que desea eliminar el registro?", 'Atención', Alert.OK|Alert.NO, null, fnConfirmarEliminacion);
+				}
+			}
+			
+			private function fnConfirmarEliminacion(ev:CloseEvent):void{
+				if(ev.detail == Alert.OK){
+					var evM:MovimientoEvent = new MovimientoEvent(MovimientoEvent.ELIMINAR, fnEliminado, selectedMov);
+					Controller.getInstance().dispatchEvent(evM);
+				}
+			}
+			
+			private function fnEliminado(res:*):void{
+				if(res == 'OK'){
+					Alert.show("Registro Eliminado", 'Info');	
+					fnBuscar();
+				} else {
+					Alert.show("Ha ocurrido un error en la transacción", 'Info');
+				}
+				
+			}
+			
+			private function fnMonto(item:Object, column:GridColumn):String{
+				var monto:String = '';
+				switch(column.headerText){
+					case 'Ing. Dev.':
+						if(item.tipo_movimiento == 2 || item.tipo_movimiento == 6){
+							monto = item.monto + '';
+						}
+						break;
+					case 'Gastos':
+						if(item.tipo_movimiento == 3){
+							monto = item.monto + '';
+						}
+						break;
+					case 'Pagos':
+						if(item.tipo_movimiento == 4 || item.tipo_movimiento == 5){
+							monto = item.monto + '';
+						}
+						break;
+					case 'Deuda Mes':
+						if(item.tipo_movimiento == 4){
+							monto = (-item.monto) + '';
+						} else if(item.tipo_movimiento == 6){
+							monto = item.monto + '';
+						} else if(item.tipo_movimiento == 7){
+							monto = item.monto + '';
+						}
+						break;
+					
+				}
+				return monto;
+			}
+			
+			
+			private function fnTipoMovimiento(item:Object, column:GridColumn):String{
+				var txt:String;
+				switch(item.tipo_movimiento){
+					case "1":
+						txt = "Resultado Neto Año Anterior.";
+						break;
+					case "2":
+						txt = "Ingreso de Recursos Monetarios";
+						break;
+					case "3":
+						txt = "Gasto Efectuado";
+						break;
+					case "4":
+						txt = "Pago de Gasto o Deuda";
+						break;
+					case "5":
+						txt = "Egreso de Dineros";
+						break;
+					case "6":
+						txt = "Aporte Provisorio";
+						break;
+					case "7":
+						txt = "Retenciones Adeudadas";
+						break;
+				}
+				return txt;
+			}
+			
+			private var saldoCaja:int = 0;
+			
+			
+			/*private function fnSaldos(item:Object, column:GridColumn):String{
+				var txt:String;
+				switch(column.headerText){
+					case "Saldo Caja":
+						saldoCaja += item.monto; 
+						txt = saldoCaja + '';
+						break;
+					case "Deuda Acum.":
+						txt = "Ingreso de Recursos Monetarios";
+						break;
+					case "Resultado":
+						txt = "Gasto Efectuado";
+						break;
+					
+				}
+				return txt;
+			}*/
 			
 		]]>
 	</fx:Script>
@@ -55,67 +167,81 @@
 		<s:columns>
 			<s:ArrayList>
 				<s:GridColumn dataField="fec_mvto" headerText="Fecha"></s:GridColumn>
-				<s:GridColumn dataField="glosa" headerText="Glosa"></s:GridColumn>
+				<s:GridColumn labelFunction="fnTipoMovimiento" headerText="Tipo Movimiento"></s:GridColumn>
 				<s:GridColumn dataField="tipo_documento" headerText="Tipo Doc"></s:GridColumn>
 				<s:GridColumn dataField="nro_doc" headerText="N° Documento"></s:GridColumn>
-				<s:GridColumn headerText="Ing. Dev."></s:GridColumn>
-				<s:GridColumn headerText="Gastos"></s:GridColumn>
-				<s:GridColumn headerText="Pagos"></s:GridColumn>
-				<s:GridColumn headerText="Deuda Mes"></s:GridColumn>
-				<s:GridColumn dataField="dataField3" headerText="Saldo Caja"></s:GridColumn>
-				<s:GridColumn dataField="dataField1" headerText="Deuda Acum."></s:GridColumn>
-				<s:GridColumn dataField="dataField2" headerText="Resultado"></s:GridColumn>
-				<s:GridColumn dataField="dataField2" headerText="Fuente Financiera"></s:GridColumn>
+				<s:GridColumn headerText="Ing. Dev." labelFunction="fnMonto"></s:GridColumn>
+				<s:GridColumn headerText="Gastos" labelFunction="fnMonto"></s:GridColumn>
+				<s:GridColumn headerText="Pagos" labelFunction="fnMonto"></s:GridColumn>
+				<s:GridColumn headerText="Deuda Mes" dataField="deuda"></s:GridColumn>
+				<s:GridColumn dataField="saldoCaja" headerText="Saldo Caja"></s:GridColumn>
+				<s:GridColumn dataField="deudaAcum" headerText="Deuda Acum."></s:GridColumn>
+				<s:GridColumn dataField="resultado" headerText="Resultado"></s:GridColumn>
+				<s:GridColumn dataField="financiamiento.descripcion" headerText="Fuente Financiera"></s:GridColumn>
 			</s:ArrayList>
 		</s:columns>
 		
 	</s:DataGrid>
-	<s:BorderContainer x="10" y="19" width="440" height="85" cornerRadius="5">
-		<s:VGroup left="5" top="5" width="143">
-			<s:Group width="100%">
-				<s:Label verticalCenter="0" text="Desde"/>
-				<mx:DateField right="0" top="0"/>
-			</s:Group>
-			<s:Group width="100%">
-				<s:Label verticalCenter="0" text="Hasta" />		
-				<mx:DateField right="0" top="0"/>
-			</s:Group>
+	<s:HGroup paddingTop="5" paddingLeft="5" paddingRight="5" width="100%">
+		<s:VGroup width="40%">
+			<s:Label x="23" top="5" fontWeight="bold" text="Filtros"/>
+			<s:BorderContainer x="10" y="19" width="100%" height="85" cornerRadius="5">
+				<s:VGroup left="5" top="5" width="143">
+					<s:Group width="100%">
+						<s:Label verticalCenter="0" text="Desde"/>
+						<mx:DateField right="0" top="0"/>
+					</s:Group>
+					<s:Group width="100%">
+						<s:Label verticalCenter="0" text="Hasta" />		
+						<mx:DateField right="0" top="0"/>
+					</s:Group>
+				</s:VGroup>
+				<s:Group x="181" y="7">
+					
+					<s:Label x="32" verticalCenter="0" text="Tipo Movimiento"/>
+					<s:DropDownList x="132" verticalCenter="0" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion"></s:DropDownList>
+				</s:Group>
+				<s:Button x="353" y="49" label="Buscar" click="fnBuscar()"/>
+			</s:BorderContainer>	
 		</s:VGroup>
-		<s:Group x="181" y="7">
-			
-			<s:Label x="32" verticalCenter="0" text="Tipo Movimiento"/>
-			<s:DropDownList x="132" verticalCenter="0"></s:DropDownList>
-		</s:Group>
-		<s:Button x="353" y="49" label="Buscar" click="fnBuscar()"/>
-	</s:BorderContainer>
-	<s:BorderContainer x="905" y="19" width="167" height="85" cornerRadius="5">
-		<s:layout>
-			<s:HorizontalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"/>
-		</s:layout>
-		
-		<s:Button width="100%" height="72" label="Ingresar" click="fnIngresarMov(event)"/>
-		<s:VGroup gap="5" 
+		<s:VGroup width="40%">
+			<s:Label x="465" top="5" fontWeight="bold" text="Detalle"/>
+			<s:BorderContainer x="458" y="19" width="100%" height="85" cornerRadius="5">
+				<s:Label x="10" y="10" fontSize="15" text="{selectedMov.glosa}"/>
+				<s:Label x="11" y="43" text="Proveedor:"/>
+				<s:Label x="81" y="41" text="{selectedMov.proveedor.nombre}"/>
+				<s:Label x="10" y="62" text="Monto:"/>
+				<s:Label x="80" y="62" text="{selectedMov.monto}"/>
+				<s:Label x="233" y="42" text="Rut:"/>
+				<s:Label x="277" y="43" text="{selectedMov.proveedor.rut}"/>
+				<s:Label x="161" y="61" text="Código Contable:"/>
+				<s:Label x="278" y="61" text="{selectedMov.cod_contable}"/>
+				<s:Label x="332" y="61" text="Cuenta:"/>
+				<s:Label x="395" y="61" text="{selectedMov.cod_cuenta}"/>
+			</s:BorderContainer>	
+		</s:VGroup>
+		<s:VGroup width="20%">
+			<s:Label x="916" top="5" fontWeight="bold" text="Acción"/>
+			<s:BorderContainer width="100%" height="85" cornerRadius="5">
+				<s:layout>
+					<s:HorizontalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"/>
+				</s:layout>
+				
+				<s:Button width="100%" height="72" label="Ingresar" click="fnIngresarMov(event)"/>
+				<s:VGroup gap="5" 
 						  horizontalAlign="left" verticalAlign="top">
-			<s:Button x="93" y="0" height="33" label="Editar" click="fnIngresarMov(event)"/>
-			<s:Button x="93" y="49" height="34" label="Eliminar"/>	
+					<s:Button x="93" y="0" height="33" label="Editar" click="fnIngresarMov(event)"/>
+					<s:Button x="93" y="49" height="34" label="Eliminar" click="fnEliminar(event)"/>	
+				</s:VGroup>
+				
+				
+			</s:BorderContainer>	
 		</s:VGroup>
 		
 		
-	</s:BorderContainer>
-	<s:BorderContainer x="458" y="19" width="439" height="85" cornerRadius="5">
-		<s:Label x="10" y="10" fontSize="15" text="{selectedMov.glosa}"/>
-		<s:Label x="11" y="43" text="Proveedor:"/>
-		<s:Label x="81" y="41" text="{selectedMov.proveedor.nombre}"/>
-		<s:Label x="10" y="62" text="Monto:"/>
-		<s:Label x="80" y="62" text="{selectedMov.monto}"/>
-		<s:Label x="233" y="42" text="Rut:"/>
-		<s:Label x="277" y="43" text="{selectedMov.proveedor.rut}"/>
-		<s:Label x="161" y="61" text="Código Contable:"/>
-		<s:Label x="278" y="61" text="{selectedMov.cod_contable}"/>
-		<s:Label x="332" y="61" text="Cuenta:"/>
-		<s:Label x="395" y="61" text="{selectedMov.cod_cuenta}"/>
-	</s:BorderContainer>
-	<s:Label x="23" top="5" fontWeight="bold" text="Filtros"/>
-	<s:Label x="465" top="5" fontWeight="bold" text="Detalle"/>
-	<s:Label x="916" top="5" fontWeight="bold" text="Acción"/>
+		
+		
+			
+	</s:HGroup>
+	
 </s:Group>

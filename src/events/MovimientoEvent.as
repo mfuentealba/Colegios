@@ -6,11 +6,14 @@ package events
 	{
 		public static const LISTAR:String = 'getAllMovimiento';
 		public static const CREAR:String = 'crearMovimiento';
+		public static const CREAR_SALDO:String = 'crearMovimientoSaldo';
+		public static const ELIMINAR:String = 'deleteMovimiento';
+		public static const LISTAR_FORMA_PAGO:String = 'fnFormaPago';
 		
-		public var movVO:MovimientoVO;
+		public var movVO:*;
 		public var filtros:Object;
 		
-		public function MovimientoEvent(type:String, _callback:Function = null, _movVO:MovimientoVO = null, _filtros:Object = null)
+		public function MovimientoEvent(type:String, _callback:Function = null, _movVO:* = null, _filtros:Object = null)
 		{
 			super(type);
 			clase = "MovimientoEvent";			

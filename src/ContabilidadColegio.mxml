@@ -10,6 +10,7 @@
 			import controlador.Controller;
 			
 			import events.FinanciamientoEvent;
+			import events.MovimientoEvent;
 			import events.ProveedoresEvent;
 			import events.TipoDocumentoEvent;
 			import events.TipoMovimientoEvent;
@@ -34,6 +35,9 @@
 				
 				var evFinanciamiento:FinanciamientoEvent = new FinanciamientoEvent(FinanciamientoEvent.LISTAR);
 				Controller.getInstance().dispatchEvent(evFinanciamiento);
+				
+				var evMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR_FORMA_PAGO);
+				Controller.getInstance().dispatchEvent(evMov);
 			}
 			
 		]]>

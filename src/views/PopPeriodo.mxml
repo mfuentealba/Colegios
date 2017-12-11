@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="336" height="176" title="Periodo" close="fnCerrarPop(event)">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import modelo.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TextInput;
+			public var txtPeriodo:TextInput;
+			[Bindable] private var arrMeses:Array = [{label: 'Enero', data: '01'}, {label: 'Febrero', data: '02'}, {label: 'Marzo', data: '03'}, {label: 'Abril', data: '04'}, {label: 'Mayo', data: '05'}, {label: 'Junio', data: '06'}, {label: 'Julio', data: '07'}, {label: 'Agosto', data: '08'}, {label: 'Septiembre', data: '09'}, {label: 'Octubre', data: 10}, {label: 'Noviembre', data: 11}, {label: 'Diciembre', data: 12}];
+			
+			protected function fnActualizarPeriodo(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(ddMes.selectedIndex < 0 || ddYear.selectedIndex < 0){
+					Alert.show("Debe ingresar valor para mes y año", "Atención");
+					return;
+				}
+				txtPeriodo.text = ddMes.selectedItem.data + '-' + ddYear.selectedItem.data;
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnCerrarPop(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<s:DropDownList id="ddMes" left="35" top="57" dataProvider="{new ArrayCollection(arrMeses)}"></s:DropDownList>
+	<s:DropDownList id="ddYear" right="35" top="57" dataProvider="{new ArrayCollection(ModelApp.getInstance().arrYears)}"></s:DropDownList>
+	<s:Label x="34" top="37" text="Mes"/>
+	<s:Label x="187" top="37" text="Año"/>
+	<s:Button x="132" y="116" label="Aceptar" click="fnActualizarPeriodo(event)"/>
+</s:TitleWindow>
