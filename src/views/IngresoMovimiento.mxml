@@ -3,8 +3,8 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   width="400" height="542" close="fnCerrar(event)" creationComplete="fnIni(event)"
-			   currentState="inicial" title="Ingreso de Movimiento"
-			   height.saldo="292">
+			   currentState="inicial" title="Ingreso de Movimiento" title.saldo="Ingrese saldo anterior"
+			   height.saldo="292" keyUp="fnSalir(event)">
 	<fx:Script>
 		<![CDATA[
 			import controlador.Controller;
@@ -29,24 +29,46 @@
 			
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
 			[Bindable] public var movVO:MovimientoVO;
-			public var editar:Boolean;
+			[Bindable] public var esSaldo:Boolean;
 			public var fnPost:Function;
+			public var fnBotonEjecuta:Function;
 			[Bindable] private var txtLeyenda:String = 'Monto';
 			[Bindable] public var fp:Boolean;
 			
 			[Bindable] private var arrYears:Array = [{label: 2016, data: 2016}, {label: 2017, data: 2017}, {label: 2018, data: 2018}, {label: 2019, data: 2019}, {label: 2020, data: 2020}, {label: 2021, data: 2021}, {label: 2022, data: 2022}, {label: 2023, data: 2023}];
 			
-			protected function fnCerrar(event:CloseEvent):void
+			protected function fnCerrar(event:CloseEvent = null):void
 			{
 				// TODO Auto-generated method stub
 				PopUpManager.removePopUp(this);
 			}
 			
+			private function fnLimpiar():void{
+				var mov:MovimientoVO = new MovimientoVO();
+				txtGlosa.text = '';
+				dfFecMov.text = '';
+				dfFecMov.selectedIndex = -1;
+				ddTipoMov.selectedIndex = -1;
+				ddTipoDoc.selectedIndex = -1;
+				txtDocto.text = movVO.nro_doc + '';
+				cbProveedor.selectedIndex = -1;
+				ddFuenteFinanciera.selectedIndex = -1;
+				txtMonto.text = '';
+				txtCodCuenta.text = '';
+				txtCodContable.text = '';
+				txtPeriodo.text = '';
+			}
+			
 			protected function fnGrabarMov(event:MouseEvent):void
 			{
-				if(ddTipoMov.selectedIndex == 0){
+				if(event.target.label == 'Grabar'){
+					fnBotonEjecuta = fnCerrar;
+				} else {
+					fnBotonEjecuta = fnLimpiar;
+				}
+				if(currentState == 'saldo'){
 					var saldo:MovimientoSaldoVO = new MovimientoSaldoVO();
-					saldo.id = ddYear.selectedItem.data;
+					saldo.id = txtPeriodo.text;
 					saldo.saldo_caja = Number(txtMonto.text);
 					saldo.deuda_acumulada = Number(txtMonto0.text);
 					saldo.resultado = Number(txtMonto1.text);
@@ -62,7 +84,7 @@
 					mov.tipo_documento = ddTipoDoc.selectedItem.codigo;
 					mov.nro_doc = int(txtDocto.text);
 					mov.id_proveedor = int(cbProveedor.selectedItem.id);
-					mov.id_fuente_financiera = ddFuenteFinanciera.selectedItem.id;
+					mov.id_fuente_financiera = ddFuenteFinanciera.selectedItem ? ddFuenteFinanciera.selectedItem.id : null;
 					mov.monto = int(txtMonto.text);
 					mov.cod_cuenta = txtCodCuenta.text;
 					mov.cod_contable = txtCodContable.text;
@@ -81,7 +103,8 @@
 					return;
 				} 
 				fnPost.call(null);
-				PopUpManager.removePopUp(this);
+				fnBotonEjecuta.call(null);
+				
 			}
 			
 			
@@ -101,10 +124,16 @@
 			{
 				// TODO Auto-generated method stub
 				if(!movVO){
+					btnSecundario.visible = true;
 					movVO = new MovimientoVO();
+					if(esSaldo){
+						
+						txtPeriodo.text = ((new Date()).fullYear - 1) + '';
+					}
 					
 				} else {
-					editar = true;
+					btnSecundario.visible = false;
+					
 					txtGlosa.text = movVO.glosa;
 					dfFecMov.text = movVO.fec_mvto;
 					ddTipoMov.selectedItem = modelApp.objTipoMovimiento[movVO.tipo_movimiento];
@@ -128,7 +157,7 @@
 			protected function fnLeyendaMonto(event:IndexChangeEvent):void
 			{
 				// TODO Auto-generated method stub
-				if(event.newIndex == 1 || event.newIndex == 2 || event.newIndex == 5){
+				if(event.newIndex == 0 || event.newIndex == 1 || event.newIndex == 4){
 					gFinanciamiento.visible = true;
 					gFinanciamiento.includeInLayout = true;
 				} else {
@@ -139,38 +168,38 @@
 				
 				
 				switch(event.newIndex){
-					case 0:
+					/*case 0:
 						txtLeyenda = 'Saldo de Caja';
 						fp = false;
 						currentState = 'saldo';
-						break;
-					case 1:
+						break;*/
+					case 0:
 						txtLeyenda = 'Ingreso o Entrada, de $$$';
 						fp = false;
 						currentState = 'inicial';
 						
 						break;
-					case 2:
+					case 1:
 						txtLeyenda = 'Gasto Efectuado';
 						fp = false;
 						currentState = 'inicial';
 						break;
-					case 3:
+					case 2:
 						txtLeyenda = 'Pago de Gasto o Deuda';
 						currentState = 'inicial';
 						fp = true;
 						break;
-					case 4:
+					case 3:
 						txtLeyenda = 'Egreso de Dineros';
 						currentState = 'inicial';
 						fp = true;
 						break;
-					case 5:
+					case 4:
 						txtLeyenda = 'Ingreso por Prestamo o Aporte Provisorio';
 						fp = false;
 						currentState = 'inicial';
 						break;
-					case 6:
+					case 5:
 						txtLeyenda = 'Retenciones Adeudadas';
 						fp = false;
 						currentState = 'inicial';
@@ -199,6 +228,21 @@
 				txtPeriodo.text = dfFecMov.text.substr(3);
 			}
 			
+			protected function fnSalir(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(event.keyCode == 27){
+					Alert.show("¿Desea salir de esta opción?\n(Perderá los datos del formulario)", 'Atención', Alert.OK|Alert.CANCEL, null, fnConfirmarSalir);
+				}
+			}
+			
+			private function fnConfirmarSalir(ev:CloseEvent):void{
+				if(ev.detail == Alert.OK){
+					fnPost.call(null);
+					PopUpManager.removePopUp(this);
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<s:states>
@@ -210,7 +254,7 @@
 	</fx:Declarations>
 	
 	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="10" paddingRight="10" >
-		<s:Group width="100%" height="23">
+		<s:Group includeIn="inicial" width="100%" height="23">
 			<s:Label text="Tipo de Movimiento" verticalCenter="0"/>
 			<s:DropDownList id="ddTipoMov" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion" width="155" right="0" change="fnLeyendaMonto(event)"/>
 		</s:Group>
@@ -220,13 +264,13 @@
 		</s:Group>
 		<s:Group width="100%" height="23">
 			<s:Label text="Periodo" verticalCenter="0"/>
-			<s:HGroup includeIn="inicial" right="0">
+			<s:HGroup right="0">
 				<s:TextInput editable="false" width="110" id="txtPeriodo"/>
-				<s:Button width="41" label="@" click="fnCambiarPeriodo(event)"/>
+				<s:Button includeIn="inicial" width="41" label="@" click="fnCambiarPeriodo(event)"/>
 			</s:HGroup>
 			
 			
-			<s:DropDownList includeIn="saldo" id="ddYear" width="155" right="0" dataProvider="{new ArrayCollection(arrYears)}"/>
+			<!--<s:DropDownList includeIn="saldo" id="ddYear" width="155" right="0" dataProvider="{new ArrayCollection(arrYears)}"/>-->
 		</s:Group>
 		<s:Group includeIn="inicial" width="100%" height="51">
 			<s:Label text="Glosa"/>
@@ -286,6 +330,7 @@
 		</s:Group>
 		<s:Group width="100%" height="50">
 			<s:Button label="Grabar" width="50%" left="0" height="50" click="fnGrabarMov(event)"/>
+			<s:Button id="btnSecundario" includeIn="inicial" width="50%" right="0" height="50" label="Guardar e Ingresar Otro" click="fnGrabarMov(event)"/>
 			
 		</s:Group>
 	</s:VGroup>

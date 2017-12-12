@@ -55,6 +55,10 @@ package listeners
 					rmtObjMovimiento.fnFormaPago();
 					
 					break;
+				case MovimientoEvent.PERIODO_ANTERIOR:
+					rmtObjMovimiento.getCierrePeriodo(evento.filtros.fecha);
+					
+					break;
 				
 			}
 		}
@@ -64,7 +68,9 @@ package listeners
 			switch(data.token.message['operation']){
 				case MovimientoEvent.LISTAR:
 					modelApp.arrMovimiento = new ArrayCollection(data.result as Array);
-					modelApp.saldoCaja = 0;
+					modelApp.saldoCajaAcum = modelApp.saldoCaja;
+					modelApp.deudaAcum = modelApp.deuda;
+					modelApp.resultadoAcum = modelApp.resultado;
 					//var obj:Object = data.result;
 					modelApp.arrMovimiento.source.forEach(fnDict);
 					break;
@@ -81,17 +87,38 @@ package listeners
 					modelApp.arrFormaPago = new ArrayCollection(data.result as Array);
 					modelApp.arrMovimiento.source.forEach(fnDictFormaPago);
 					break;
+				case MovimientoEvent.PERIODO_ANTERIOR:
+					if(data.result == null){
+						evento.callback.call(null);
+					} else {
+						modelApp.saldoCaja = data.result.saldo_caja;
+						modelApp.deuda = data.result.deuda_acumulada;
+						modelApp.resultado = data.result.resultado;
+					}
+					break;
 			}
 			//delete this;
 		}
 		
 		private static function fnDict(item:MovimientoVO, index:int, arr:Array):void{
 			modelApp.objMovimiento[item.id + ''] = item;
-			if(item.tipo_movimiento == '2'){
-				modelApp.saldoCaja += item.monto;
-				item.saldoCaja = modelApp.saldoCaja;
+			switch(item.tipo_movimiento){
+				case '2':
+					modelApp.saldoCajaAcum += item.monto;
+					modelApp.resultadoAcum += item.monto;
+					break;
+				case '3':
+					modelApp.resultadoAcum -= item.monto;
+					modelApp.deudaAcum += item.monto;
+					break;
+				case '4':
+					modelApp.saldoCajaAcum -= item.monto;
+					modelApp.deudaAcum -= item.monto;
+					break;
 			}
-			
+			item.saldoCaja = modelApp.saldoCajaAcum;
+			item.resultado = modelApp.resultadoAcum;
+			item.deudaAcum = modelApp.deudaAcum;
 		}
 		
 		private static function fnDictFormaPago(item:*, index:int, arr:Array):void{

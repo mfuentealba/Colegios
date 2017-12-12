@@ -9,6 +9,7 @@ package events
 		public static const CREAR_SALDO:String = 'crearMovimientoSaldo';
 		public static const ELIMINAR:String = 'deleteMovimiento';
 		public static const LISTAR_FORMA_PAGO:String = 'fnFormaPago';
+		public static const PERIODO_ANTERIOR:String = 'getCierrePeriodo';
 		
 		public var movVO:*;
 		public var filtros:Object;

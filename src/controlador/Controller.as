@@ -61,6 +61,7 @@ package controlador
 			addEventListenerNew(MovimientoEvent.CREAR_SALDO, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.LISTAR_FORMA_PAGO, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.ELIMINAR, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.PERIODO_ANTERIOR, MovimientoListener);
 			addEventListenerNew(FinanciamientoEvent.LISTAR, FinanciamientoListener);
 			
 		}	
