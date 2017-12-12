@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" gap="0" minWidth="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			public var colorFondo:String;
+			[Bindable] public var saldo:String;
+			[Bindable] public var deuda:String;
+			[Bindable] public var resultado:String;
+			[Bindable] public var texto:String;
+			
+			private function set fnColor(val:String):void{
+				/*lblTexto.setStyle("backgroundColor", colorFondo);
+				lblQty.setStyle("color", colorFondo);
+				lblPx.setStyle("color", colorFondo);*/
+			}
+			
+			
+			
+		]]>
+	</fx:Script>	
+	<fx:Binding source="saldo" destination="fnColor"/>
+	<s:Label id="lblTexto" text="{texto}" color="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="20%" fontWeight="bold"/>
+	<s:Label text="Saldo Caja: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
+	<s:Label id="lblQty" text="{saldo}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+	<s:Label text="Deuda: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
+	<s:Label id="lblPx" text="{deuda}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+	<s:Label text="Resultado: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
+	<s:Label id="lblResultado" text="{resultado}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+</s:HGroup>

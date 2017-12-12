@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="300">
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+		
+	</fx:Declarations>
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		.ErrorPanel
+		{
+			borderAlpha: 1;
+			borderThicknessLeft: 0;
+			borderThicknessTop: 0;
+			borderThicknessBottom: 0;
+			borderThicknessRight: 0;
+			header-colors:#CC0000, #9D0000;
+			title-style-name:ErrorPanelTitle;	
+			
+		}
+		
+		.ErrorPanelTitle
+		{
+			text-align:left;
+			font-weight:bold;
+			font-family: Verdana;
+			font-size: 12;
+			color:white;
+		}
+		
+		.TextoMensaje
+		{
+			font-weight:bold;
+			font-family: Verdana;
+			font-size: 12;	
+		}
+		
+		.TextoMensajeTecnico
+		{
+			font-weight:bold;
+			font-family: Verdana;
+			font-size: 9;	
+			color: #000000;
+		}
+		
+		.BotonError
+		{
+			highlightAlphas: 0, 0;
+			fillAlphas: 1, 1, 1, 1;
+			fillColors: #333333, #333333, #333333, #333333;
+			color: #ffffff;
+			textRollOverColor: #444444;
+			textSelectedColor: #444444;
+			borderColor: #444444;
+			themeColor: #444444;
+			shadow-distance:0;
+		}
+	</fx:Style>
+	<fx:Script>
+		<![CDATA[
+			import mx.core.Application;
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			
+			[Bindable]
+			[Embed(source="assets/imgs/ico_larraBlanco.png")]
+			private var IconLarra:Class;  
+			
+			[Bindable]
+			private var objImagen:Class;        
+			
+			[Embed(source="assets/imgs/info.png")]
+			private var IconInfo:Class;     
+			
+			[Embed(source="assets/imgs/alert.png")]
+			private var IconAlert:Class;   
+			
+			[Bindable]
+			public var strMensaje:String = "";     
+			[Bindable]
+			public var strAyuda:String;  
+			[Bindable]   
+			public var strTipo:String = "";   
+			[Bindable]        
+			public var strTitulo:String = "";
+			[Bindable]        
+			public var strTooltip:String = "Vista Error Técnico";          
+			
+			[Bindable]
+			private var stateVIEW:String = "";
+			
+			public function show():void
+			{
+				PopUpManager.addPopUp(this,Sprite(FlexGlobals.topLevelApplication), true);
+				PopUpManager.centerPopUp(this);
+			}
+			
+			private function init():void
+			{
+				switch (strTipo)
+				{
+					case 'alerta_informacion':  this.objImagen = IconInfo;
+						break;
+					case 'alerta_error': 		this.objImagen = IconAlert;
+						break;		
+					default :												
+				}
+			}   
+			
+			private function cambioVista():void
+			{
+				if (vstDatos.selectedIndex==0)
+				{
+					this.stateVIEW = "vistaError"
+					this.strTooltip = "Vista Error Usuario"
+				}
+				else
+				{
+					this.stateVIEW = "";
+					this.strTooltip = "Vista Error Técnico"
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	
+	
+	<s:states>
+		<s:State name="vistaError" />
+	</s:states>
+	
+	<mx:VBox  horizontalAlign="center" backgroundColor="BLACK" verticalAlign="middle" width="99%" height="99%" >
+		<mx:HBox horizontalGap="0" horizontalAlign="center"
+				 verticalAlign="middle" width="100%" height="100%" 
+				 borderStyle="none" >    	
+			<s:Button icon="{this.objImagen}" styleName="BotonError" toolTip="{this.strTooltip}" id="btnImagen" height="100%" width="20%" click="{this.cambioVista()}" chromeColor="0x000000" />    	
+			<mx:VBox width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+				
+				<mx:ViewStack id="vstDatos" selectedChild.vistaError="{this.vbxErrorDetalle}" height="100%" width="100%" creationPolicy="all">
+					<mx:VBox width="100%" id="TextoNegroII" height="100%" paddingTop="10" horizontalAlign="center">
+						<mx:Text styleName="TextoMensaje" textAlign="center" height="100%" width="100%" text="{this.strMensaje}"/>
+					</mx:VBox>
+					<mx:VBox width="100%" id="vbxErrorDetalle" height="100%" paddingTop="10" horizontalAlign="center">
+						<mx:TextArea styleName="TextoMensajeTecnico" height="100%" width="100%" text="{this.strAyuda}" editable="false"/>				    
+					</mx:VBox>
+				</mx:ViewStack>
+				
+				<mx:Button id="btnOk" styleName="TextoNegroII" label="Ok" width="85" click="{PopUpManager.removePopUp(this);}"/>
+				
+				<mx:Spacer height="1"/>
+			</mx:VBox>
+			
+			
+		</mx:HBox>
+	</mx:VBox>
+	
+</s:Group>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 width="100%" height="100%"
+           horizontalCenter="0" verticalCenter="0">
+	<!--<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#333333" alpha=".5"/>
+		</s:fill>
+	</s:Rect>-->
+    <s:BorderContainer width="232" height="50.5" horizontalCenter="0"
+               verticalCenter="-30">
+        <!--<mx:ProgressBar id="progressBar" width="209" indeterminate="true" direction="right"
+                        label="{resourceManager.getString('resources','general.data.progressBar')}" color="#6A6464" themeColor="#CC0000" x="10"
+                        y="13.75"/>-->
+		<mx:ProgressBar id="progressBar" width="209" indeterminate="true" direction="right"
+						label="Esperando respuesta" color="#6A6464" x="10"
+						y="13.75"/>
+    </s:BorderContainer>
+</s:Group>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:mx="library://ns.adobe.com/flex/mx" 
+				>
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.core.mx_internal;
+			
+			import spark.components.Image;
+			
+			
+			
+			public var arr:Array = [];
+			
+			[Embed(source="assets/icons/pdf.png")] [Bindable] public var dividerClass:Class;
+			
+			override public function set data(value:Object):void
+			{
+				// TODO Auto Generated method stub
+				super.data = value;
+				if(value){
+					hgImg.removeAllElements();
+					for each(var obj:Object in value.arrDoc){
+						var img:Image = new Image();
+						img.id = obj.val;
+						img.toolTip = obj.label;
+						//img.setStyle("icon", dividerClass);
+						img.source = dividerClass;
+						hgImg.addElement(img);
+					}	
+				}
+				
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:HGroup width="100%" height="100%" id="hgImg">
+		<!--<s:Button icon="assets/icons/pdf-icon.png"/>-->
+	</s:HGroup>
+	
+</s:GridItemRenderer>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TextInput 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	restrict="0-9.\-" 
+	focusOut="onFocusOut(event)" 
+	focusIn="onFocusIn(event)" 
+	initialize="onInitialize()"
+	textAlign="right">
+ 
+	<fx:Script><![CDATA[
+		import mx.formatters.NumberBaseRoundType;
+		import mx.formatters.NumberFormatter;
+
+        private var _formatter:NumberFormatter = new NumberFormatter();
+        private var _valor:Number = 0;
+
+        public var ValorMinimo:Number = -1;
+        public var ValorMaximo:Number = -1;
+
+        private function onInitialize():void {
+            _formatter.decimalSeparatorFrom = ".";
+            _formatter.decimalSeparatorTo = ",";
+            _formatter.thousandsSeparatorFrom = "";
+            _formatter.thousandsSeparatorTo = ".";
+			_formatter.rounding = NumberBaseRoundType.NEAREST
+        }
+
+        public function get Decimales():int {
+            return Number(this._formatter.precision);
+        }
+
+        public function set Decimales(value:int):void {
+            this._formatter.precision = value;
+        }
+
+        public function get Valor():Number {
+            return _valor;
+        }
+
+        public function set Valor(value:Number):void {
+            _valor = value;
+            _valor = ValorMinimo != -1 && value < ValorMinimo ? ValorMinimo : _valor;
+            _valor = ValorMaximo != -1 && value > ValorMaximo ? ValorMaximo : _valor;
+            this.text = this._formatter.format(_valor);
+        }
+		
+		
+		
+		
+        private function onFocusOut(event:FocusEvent):void {
+			if(this.text.split(",").length > 1){
+				this.Valor = Number(this.text.split(".").join("").replace(",", "."));	
+			} else {
+				this.Valor = Number(this.text);
+			}
+            
+            this.text = this._formatter.format(this.Valor);
+        }
+
+        private function onFocusIn(event:FocusEvent):void {
+            this.text = this.text.split(".").join("");
+            this.text = this.text.replace(",", ".");
+        }
+        ]]></fx:Script>
+	
+</mx:TextInput>
+
+

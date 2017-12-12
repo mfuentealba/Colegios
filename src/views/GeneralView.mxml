@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="1082" height="574">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:components="components.*">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -183,7 +183,7 @@
 				<s:Group x="181" y="7">
 					
 					<s:Label x="32" verticalCenter="0" text="Tipo Movimiento"/>
-					<s:DropDownList x="132" verticalCenter="0" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion"></s:DropDownList>
+					<s:DropDownList x="132" verticalCenter="0" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion" skinClass="assets.skins.DropDownSkin"></s:DropDownList>
 				</s:Group>
 				<s:Button x="353" y="49" label="Buscar" click="fnBuscar()"/>
 			</s:BorderContainer>	
@@ -228,7 +228,7 @@
 		
 	</s:HGroup>
 	<s:HGroup width="100%" gap="20">
-		<s:Label text="Periodo Anterior:     " fontWeight="bold" fontSize="18" width="50%"/>
+		<!--<s:Label text="Periodo Anterior:     " fontWeight="bold" fontSize="18" width="50%"/>
 		<s:HGroup width="10%" height="100%" verticalAlign="middle">
 			<s:Label text="Saldo Caja:" fontWeight="bold"/>
 			<s:Label text="{modelApp.saldoCaja}"/>	
@@ -240,7 +240,9 @@
 		<s:HGroup width="10%" height="100%" verticalAlign="middle">
 			<s:Label text="Resultado" fontWeight="bold"/>
 			<s:Label text="{modelApp.resultado}"/>	
-		</s:HGroup>
+		</s:HGroup>-->
+		
+		<components:InfoMarket texto="Periodo" saldo="{modelApp.saldoCaja}" deuda="{modelApp.deuda}" resultado="{modelApp.resultado}" colorFondo="#889F50" height="30" width="100%"/>
 		
 		
 	</s:HGroup>

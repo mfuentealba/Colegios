@@ -1,0 +1,45 @@
+/* CSS file */
+@namespace s "library://ns.adobe.com/flex/spark";
+@namespace mx "library://ns.adobe.com/flex/mx";
+
+global
+{
+	chromeColor: #294867;
+	color: #CCCCCC;
+	/*contentBackgroundColor: #39628C;
+	symbolColor: #000000;
+	rollOverColor: #355D89;
+	selectionColor: #294867;
+	focusColor: #333300;
+	accentColor: #6589AD;*/
+	
+}
+
+
+s|DataGrid{
+	skinClass:ClassReference("assets.skins.GridTemaSkin")
+}
+
+s|TitleWindow{
+	backgroundColor: #313D47
+}
+
+s|ComboBox{
+	skinClass:ClassReference("assets.skins.ComboBoxLVNoEditSkin")
+}
+
+s|BorderContainer{
+	backgroundColor: #313D47;
+	borderColor: #CCCCCC;
+}
+
+s|Button{
+	skinClass:ClassReference("assets.skins.OCbtnLimpiar");
+	color:#FFFFFF;	
+	fontWeight:bold;
+	
+	
+}
+
+
+

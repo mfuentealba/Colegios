@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Label 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	>
+<fx:Script>
+	<![CDATA[
+		import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+		
+		import mx.utils.StringUtil;
+		override public function set data(value:Object):void
+		{
+			if(ModelLocator.selectedOrder == null) return;
+			super.data = value;
+						
+			switch (ModelLocator.selectedOrder.ordStatus)
+			{
+				
+				case "0":
+					this.text = "New";
+					break;
+				case "1":
+					this.text = "Partially Filled";
+					break;
+				case "2":
+					this.text = "Filled";
+					break;
+				case "3":
+					this.text = "Done for day";
+					break;
+				case "4":
+					this.text = "Canceled";
+					break;
+				case "5":
+					this.text = "Replaced";
+					break;
+				case "6":
+					this.text = "Pending Cancel";
+					break;
+				case "7":
+					this.text = "Stopped";
+					break;
+				case "8":
+					this.text = "Rejected";
+					break;
+				case "9":
+					this.text = "Suspended";
+					break;
+				case "A":
+					this.text = "Pending New";
+					break;
+				case "1":
+					this.text = "Calculated";
+					break;
+				case "C":
+					this.text = "Expired";
+					break;
+				case "D":
+					this.text = "Accepted for Bidding";
+					break;
+				case "E":
+					this.text = "Pending Replace";
+					break;
+			}
+		}	
+	]]>
+</fx:Script>
+</mx:Label>

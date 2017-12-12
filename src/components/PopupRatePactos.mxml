@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	width="1400" height="600" creationComplete="panel1_creationCompleteHandler(event)"
+		 title="TASAS">
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.RateVO;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.advancedDataGridClasses.AdvancedDataGridColumn;
+			import mx.controls.advancedDataGridClasses.AdvancedDataGridColumnGroup;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] private var arrRates:ArrayCollection = new ArrayCollection();
+			public var model:ModelLocator = ModelLocator.getInstance();
+			[Bindable] private var loadComplete:Boolean = false;
+			protected function panel1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			
+				
+				adgTasa.groupedColumns = [];
+				var col:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				col.headerText = "DIAS";
+				col.dataField = "dias";
+				adgTasa.groupedColumns.push(col);
+				var colG:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
+				colG.headerText = 'AMOUNT';
+				
+				
+				var arrCurr:Array = [];
+				
+				var objData:Object;
+				
+				var colum:Object = {};
+				for each(var obj:Object in ModelLocator.arrRates){
+					objData = {};
+					objData['dias'] = String(obj['dias']).replace('D', ''); 
+					for(var i:int = 0; i < obj.arrAmount.length; i++){
+						if(!colum.hasOwnProperty(obj.arrAmount[i])){
+							colum[obj.arrAmount[i]] = col;
+							col = new AdvancedDataGridColumn();
+							col.headerText = ConfigUtil.conFormato(obj.arrAmount[i], 0);
+							col.dataField = obj.arrAmount[i];
+							colG.children.push(col);
+						}
+						objData[obj.arrAmount[i]] = obj.arrRate[i];
+					}
+					arrRates.addItem(objData);
+				}
+				
+				
+				arrRates.source.sort(fnCompare, Array.NUMERIC);
+				arrRates.refresh();
+				colG.children.sort(fnCompareCol, Array.NUMERIC)
+				adgTasa.groupedColumns.push(colG);
+				adgTasa.dataProvider = arrRates;
+				loadComplete = true;
+				
+				
+			}
+			
+			private function fnCompare(obj:*, obj2:*):*{
+				return Number(obj.dias) > Number(obj2.dias) ? 1 : -1;	
+				
+			}
+			
+			private function fnCompareCol(obj:*, obj2:*):*{
+				return Number(obj.dataField) > Number(obj2.dataField) ? 1 : -1;	
+				
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:VBox horizontalCenter="0" verticalCenter="0" width="100%" height="100%">
+		<mx:AdvancedDataGrid id="adgTasa" width="100%" height="100%" includeInLayout="{loadComplete}" visible="{loadComplete}"/>
+		<mx:HBox width="100%" verticalAlign="middle" horizontalAlign="center">
+			<mx:Button click="button1_clickHandler(event)" label="Cerrar"/>	
+		</mx:HBox>
+		
+	</mx:VBox>
+	
+</s:Panel>

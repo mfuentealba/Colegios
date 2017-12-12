@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:HBox 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	width="100%" height="100%" color="#FFFFFF" horizontalAlign="center" verticalAlign="middle">
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.vo.BookVO;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			
+			override public function get data():Object
+			{
+				// TODO Auto Generated method stub
+				return super.data;
+			}
+			
+			override public function set data(value:Object):void
+			{
+				// TODO Auto Generated method stub
+				super.data = value;
+				if(value.idBookState == '2'){
+					currentState = 'Button';	
+				}
+					
+				
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				Alert.show("¿Desea enviar el libro " + BookVO(data).nemo + "?", "Confirmación envío libro", Alert.YES | Alert.NO, null, alertListenerNewOrder, null, Alert.NO);
+			}
+			
+			private function alertListenerNewOrder(eventObj:CloseEvent):void{
+				if (eventObj.detail == Alert.YES) 
+				{
+					
+					
+					
+					
+				}
+			}
+				
+			
+			protected function button1_doubleClickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				event.stopImmediatePropagation();
+				event.stopPropagation();
+			}
+			
+		]]>
+	</fx:Script>
+	<mx:states>
+		<s:State name="State1"/>
+		<s:State name="Button"/>
+	</mx:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Label includeIn="State1" text="ABIERTA"/>
+	<mx:Button includeIn="Button" height="100%" width="100%" label="Enviar" click="button1_clickHandler(event)" doubleClick="button1_doubleClickHandler(event)"/>
+	
+</mx:HBox>

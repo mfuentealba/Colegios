@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.ClientAccountVo;
+			
+			import mx.utils.StringUtil;
+			
+			
+			private const AMARILLO:uint = 0xD7DF01;				
+			private const ROJO:uint = 0xFF0000;
+			private const NARANJO:uint = 0xf9ba0f;
+			
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				if(data){
+					switch(column.dataField){
+						case 'ESTADO_CLI':
+							img.visible = true;
+							img.includeInLayout = true;
+							lblData.visible = false;
+							lblData.includeInLayout= false;
+							if(data[column.dataField] == 'V'){
+								img.source = "assets/imgs/ico_V_verde.png";
+							} else if(data[column.dataField] == 'N'){
+								img.source = "assets/imgs/ico_V_naranjo.png";
+							} else {
+								img.source = "assets/imgs/ico_B_rojo.png";
+							}
+							break;
+						default:
+							img.visible = false;
+							img.includeInLayout = false;
+							lblData.visible = true;
+							lblData.includeInLayout= true;
+							lblData.text = data[column.dataField] + '';
+							break;
+						
+					}
+					var g:Graphics = graphics;             
+					g.clear();      
+					if(ConfigUtil.sinFormato(ClientAccountVo(data).SALDO_DISP) < 0)
+						g.beginFill(AMARILLO,0.2);
+					
+					
+					g.drawRect(0, 0, unscaledWidth, unscaledHeight); 
+					g.endFill();	
+				}
+					
+				
+			}
+			
+			private function onCLick(evt:MouseEvent):void
+			{
+				navigateToURL(new URLRequest(ModelLocator.xmlExternalLinks.(@id=='DesbloqueoClientes').@url + '?rut=' + StringUtil.trim(data.RUT_CLI)), '_blank')
+			}
+			
+			
+			
+			override public function set selected(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.selected = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					this.setStyle("color", "0x666666");
+				}
+			}
+			
+			
+			
+			override public function set hovered(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.hovered = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					if(!selected){
+						this.setStyle("color", "0x666666");	
+					}
+					
+				}
+			}
+		
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group minHeight="35" width="100%">
+		<s:Label id="lblData" horizontalCenter="0" verticalCenter="0"/>
+		<s:Image id="img" horizontalCenter="0" verticalCenter="0" click="onCLick(event)"/>	
+	</s:Group>
+	
+	
+</s:GridItemRenderer>

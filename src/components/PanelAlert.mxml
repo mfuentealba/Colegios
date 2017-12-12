@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark"
+	styleName="ErrorPanel" 
+	 initialize="{this.init();}" creationComplete="{setFocus();}"
+	currentState="{this.stateVIEW}" 
+	color="#ffffff"
+	 width="370" height="220"><!--layout="absolute" title="{this.strTitulo}" titleIcon="{this.IconLarra}" headerHeight="34"-->
+
+<fx:Style> 
+
+.ErrorPanel
+{
+	borderAlpha: 1;
+	borderThicknessLeft: 0;
+	borderThicknessTop: 0;
+	borderThicknessBottom: 0;
+	borderThicknessRight: 0;
+	header-colors:#CC0000, #9D0000;
+	title-style-name:ErrorPanelTitle;	
+	
+}
+
+.ErrorPanelTitle
+{
+	text-align:left;
+ 	font-weight:bold;
+ 	font-family: Verdana;
+ 	font-size: 12;
+ 	color:white;
+}
+
+.TextoMensaje
+{
+ 	font-weight:bold;
+ 	font-family: Verdana;
+ 	font-size: 12;	
+}
+
+.TextoMensajeTecnico
+{
+ 	font-weight:bold;
+ 	font-family: Verdana;
+ 	font-size: 9;	
+	color: #000000;
+}
+
+.BotonError
+{
+   highlightAlphas: 0, 0;
+   fillAlphas: 1, 1, 1, 1;
+   fillColors: #333333, #333333, #333333, #333333;
+   color: #ffffff;
+   textRollOverColor: #444444;
+   textSelectedColor: #444444;
+   borderColor: #444444;
+   themeColor: #444444;
+   shadow-distance:0;
+}
+
+	
+</fx:Style>
+
+<fx:Script>
+	<![CDATA[
+		import mx.core.Application;
+		import mx.core.FlexGlobals;
+		import mx.managers.PopUpManager;
+		
+		[Bindable]
+	    [Embed(source="assets/imgs/ico_larraBlanco.png")]
+        private var IconLarra:Class;  
+        
+        [Bindable]
+        private var objImagen:Class;        
+        
+	    [Embed(source="assets/imgs/info.png")]
+        private var IconInfo:Class;     
+          
+	    [Embed(source="assets/imgs/alert.png")]
+        private var IconAlert:Class;   
+
+        [Bindable]
+        public var strMensaje:String = "";     
+        [Bindable]
+        public var strAyuda:String;  
+        [Bindable]   
+        public var strTipo:String = "";   
+        [Bindable]        
+        public var strTitulo:String = "";
+        [Bindable]        
+        public var strTooltip:String = "Vista Error Técnico";          
+                            
+        [Bindable]
+        private var stateVIEW:String = "";
+        
+		public function show():void
+		{
+       		PopUpManager.addPopUp(this,Sprite(FlexGlobals.topLevelApplication), true);
+       		PopUpManager.centerPopUp(this);
+		}
+		
+		private function init():void
+		{
+			switch (strTipo)
+			{
+				case 'alerta_informacion':  this.objImagen = IconInfo;
+											break;
+				case 'alerta_error': 		this.objImagen = IconAlert;
+											break;		
+				default :												
+			}
+		}   
+		
+		
+        
+		protected function fnCerrar(event:MouseEvent):void
+		{
+			// TODO Auto-generated method stub
+			PopUpManager.removePopUp(this);
+		}
+		
+	]]>
+</fx:Script>
+
+<fx:Declarations>	
+	
+</fx:Declarations> 
+<mx:VBox  horizontalAlign="center" backgroundColor="BLACK" verticalAlign="middle" width="99%" height="99%" >
+    <mx:HBox horizontalGap="0" horizontalAlign="center"
+    	verticalAlign="middle" width="100%" height="100%" 
+    	borderStyle="none" >    	
+		<s:Button icon="{this.objImagen}" styleName="BotonError" toolTip="{this.strTooltip}" id="btnImagen" height="100%" width="20%" skinClass="assets.skins.ButtonCleanLVSkin"/>    	
+			<mx:VBox width="100%" height="100%" paddingTop="10" horizontalAlign="center">
+				
+				<mx:VBox width="100%" id="TextoNegroII" height="100%" paddingTop="10" horizontalAlign="center">
+					<mx:Text styleName="TextoMensaje" textAlign="center" height="100%" width="100%" text="{this.strMensaje}"/>
+					<mx:TextArea styleName="TextoMensajeTecnico" height="100%" width="100%" text="{this.strAyuda}" editable="false"/>	
+				</mx:VBox>    
+				    
+			    
+			    <s:Button id="btnOk" styleName="TextoNegroII" label="Ok" width="85" click="fnCerrar(event)" skinClass="assets.skins.BtnExcelSkin"/>
+			   
+			    <mx:Spacer height="1"/>
+			</mx:VBox>
+			
+		
+	</mx:HBox>
+</mx:VBox>
+
+</mx:Canvas>

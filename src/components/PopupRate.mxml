@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel 
+	xmlns:mx="library://ns.adobe.com/flex/mx" 
+	xmlns:fx="http://ns.adobe.com/mxml/2009"
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	width="400" creationComplete="panel1_creationCompleteHandler(event)"
+		 title="TASAS">
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.RateVO;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.advancedDataGridClasses.AdvancedDataGridColumn;
+			import mx.controls.advancedDataGridClasses.AdvancedDataGridColumnGroup;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			[Bindable] private var arrRates:ArrayCollection = new ArrayCollection();
+			public var model:ModelLocator = ModelLocator.getInstance();
+			[Bindable] private var loadComplete:Boolean = false;
+			
+			protected function panel1_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				//ModelLocator.arrRates = new ArrayCollection();
+				/*var o:RateVO = new RateVO();
+				o.CURRENCY = 'CLP';
+				o.arrPerRate.addItem({per: 30, rate: 0.31});
+				o.arrPerRate.addItem({per: 60, rate: 0.31});
+				o.arrPerRate.addItem({per: 90, rate: 0.35});
+				ModelLocator.arrRates.addItem(o);
+				
+				o = new RateVO();
+				o.CURRENCY = 'CLF';
+				o.arrPerRate.addItem({per: 30, rate: 0.26});
+				o.arrPerRate.addItem({per: 60, rate: 0.27});
+				o.arrPerRate.addItem({per: 90, rate: 0.36});
+				ModelLocator.arrRates.addItem(o);
+				
+				o = new RateVO();
+				o.CURRENCY = 'USD';
+				o.arrPerRate.addItem({per: 30, rate: 0.36});
+				o.arrPerRate.addItem({per: 60, rate: 0.42});
+				o.arrPerRate.addItem({per: 90, rate: 0.45});
+				ModelLocator.arrRates.addItem(o);*/
+				
+				adgTasa.groupedColumns = [];
+				var col:AdvancedDataGridColumn = new AdvancedDataGridColumn();
+				col.headerText = "DIAS";
+				col.dataField = "DIAS";
+				adgTasa.groupedColumns.push(col);
+				var colG:AdvancedDataGridColumnGroup = new AdvancedDataGridColumnGroup();
+				colG.headerText = 'MONEDA';
+				
+				
+				var arrCurr:Array = [];
+				
+				var objData:Object = {};
+				for each(var obj:RateVO in ModelLocator.arrRates){
+					
+					
+					col = new AdvancedDataGridColumn();
+					col.headerText = obj['CURRENCY'];
+					col.dataField = obj['CURRENCY'];
+					colG.children.push(col);					 
+					//arrCurr.push(obj['CURRENCY']);
+					for each(var obj2:Object in obj.arrPerRate){
+						if(!objData.hasOwnProperty(obj2['per'])){
+							objData[obj2['per']] = {DIAS: obj2['per']};							
+						}
+						objData[obj2['per']][obj['CURRENCY']] = obj2.rate;
+						/*for each(var obj3:Object in obj.arrPerRate){
+							
+						}*/
+					}
+				}
+			
+				
+				for(var str:String in objData){
+					arrRates.addItem(objData[str]);
+				}
+				
+				arrRates.source.sort(fnCompare, Array.NUMERIC);
+				arrRates.refresh();
+				adgTasa.groupedColumns.push(colG);
+				adgTasa.dataProvider = arrRates;
+				loadComplete = true;
+			}
+			
+			private function fnCompare(obj:*, obj2:*):*{
+				return Number(obj.DIAS) > Number(obj2.DIAS) ? 1 : -1;
+			}
+			
+			protected function button1_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<mx:VBox horizontalCenter="0" verticalCenter="0" width="100%" height="100%">
+		<mx:AdvancedDataGrid id="adgTasa" designViewDataType="flat" width="100%" includeInLayout="{loadComplete}" visible="{loadComplete}"/>
+		<mx:HBox width="100%" verticalAlign="middle" horizontalAlign="center">
+			<mx:Button click="button1_clickHandler(event)" label="Cerrar"/>	
+		</mx:HBox>
+		
+	</mx:VBox>
+	
+</s:Panel>

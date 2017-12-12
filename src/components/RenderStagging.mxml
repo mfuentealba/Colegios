@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.BookVO;
+			import com.larrainvial.gpatrimonial.orders.vo.ClientAccountVo;
+			import com.larrainvial.gpatrimonial.orders.vo.ExecRptVo;
+			
+			import mx.containers.Grid;
+			
+			import spark.components.DataGrid;
+			
+			
+			private const VERDE:uint = 0x04B404;				
+			private const ROJO:uint = 0xFF0000;
+			private var nf0:NumberFormatterLV = new NumberFormatterLV(0);
+			private var nf5:NumberFormatterLV = new NumberFormatterLV(5);
+			
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				/*	var g:Graphics = graphics;             
+					g.clear();      
+					
+					var grid1:DataGrid = DataGrid(this.owner);  
+					
+					if(data.side == "1" || data.side == "c")
+						g.beginFill(VERDE,0.2);
+					else
+						g.beginFill(ROJO,0.2);
+					
+					g.drawRect(0, 0, unscaledWidth, unscaledHeight); 
+					g.endFill();	*/
+				
+				
+				
+			}
+			
+			override public function set data(data:Object):void        
+			{             
+				super.data = data;
+				
+				if(data)
+				{
+					if(data is ExecRptVo || data is BookVO){
+						
+						img.visible = false;
+						img.includeInLayout = false;
+						lblData.visible = true;
+						lblData.includeInLayout= true;
+						lblData.text = data[column.dataField] + '';
+						switch (column.dataField) {
+							case "side":
+								
+								/*img.visible = true;
+								img.includeInLayout = true;
+								lblData.visible = false;
+								lblData.includeInLayout= false;*/
+								if(data[column.dataField] == '1'){
+									img.source = "";
+									lblData.text = 'C';
+								} else if(data[column.dataField] == '2'){
+									img.source = "";
+									lblData.text = 'V';
+								} else {
+									img.source = "";
+									lblData.text = 'VC';
+								}
+								break;	
+							case "idSide":
+								
+								/*img.visible = true;
+								img.includeInLayout = true;
+								lblData.visible = false;
+								lblData.includeInLayout= false;*/
+								if(data[column.dataField] == '1'){
+									img.source = "";
+									lblData.text = 'C';
+								} else if(data[column.dataField] == '2'){
+									img.source = "";
+									lblData.text = 'V';
+								} else {
+									img.source = "";
+									lblData.text = 'VC';
+								}
+								break;	
+							
+							case "idQtyAmount":
+								if(data[column.dataField] == '1'){
+									
+									lblData.text = 'Monto';
+								} else if(data[column.dataField] == '2'){
+									lblData.text = 'Cantidad';
+								}
+								break;
+							
+							case "symbol":
+								lblData.text = data.symbol;
+								break;
+							
+							case "account":
+								if(ModelLocator.accountNameDictionary[data.account] != null)
+									lblData.text = ModelLocator.accountNameDictionary[data.account].Name;
+								else
+									lblData.text = data.account
+								break;
+							
+							case "exDestination":
+								lblData.text = data.exDestination;
+								break;
+							
+							case "price":
+								if (data.ordType == "1")
+									lblData.text = "Market";
+								else
+									lblData.text = nf5.format(Number(String(data.price).replace(",", ".")));
+								break;
+							
+							case "avgPx":
+								lblData.text =  nf5.format(Number(String(data.avgPx).replace(",", ".")));
+								break;
+							
+							case "orderQty":
+								lblData.text =  nf0.format(Number(String(data.orderQty).replace(",", ".")));
+								break;
+							
+							case "leavesQty":
+								lblData.text = nf0.format(Number(String(data.leavesQty).replace(",", ".")));
+								break;
+							
+							case "cumQty":
+								lblData.text = nf0.format(Number(String(data.cumQty).replace(",", ".")));
+								break;
+							
+							case "lastQty":
+								lblData.text = nf0.format(Number(String(data.lastQty).replace(",", ".")));
+								break;
+							
+							case "lastPx":
+								lblData.text =  nf5.format(Number(String(data.lastPx).replace(",", ".")));
+								break;
+							
+							case "Avg Price":
+								lblData.text =  nf5.format(Number(String(data.avgPx).replace(",", ".")));
+								break;
+							
+							case "transactTime":
+								lblData.text = data.transactTime;
+								break;
+							
+							case "targetSubID":
+								lblData.text = data.targetSubID;
+								break;
+							
+							case "text":
+								lblData.text = data.text;
+								break;
+							
+							case "ordStatus":
+								switch (data.ordStatus) {
+									
+									case "0":
+										lblData.text = "New";
+										break;
+									case "1":
+										lblData.text = "Partially Filled";
+										break;
+									case "2":
+										lblData.text = "Filled";
+										break;
+									case "3":
+										lblData.text = "Done for day";
+										break;
+									case "4":
+										lblData.text = "Canceled";
+										break;
+									case "5":
+										lblData.text = "Replaced";
+										break;
+									case "6":
+										lblData.text = "Pending Cancel";
+										break;
+									case "7":
+										lblData.text = "Stopped";
+										break;
+									case "8":
+										lblData.text = "Rejected";
+										break;
+									case "9":
+										lblData.text = "Suspended";
+										break;
+									case "A":
+										lblData.text = "Pending New";
+										break;
+									case "1":
+										lblData.text = "Calculated";
+										break;
+									case "C":
+										lblData.text = "Expired";
+										break;
+									case "D":
+										lblData.text = "Accepted for Bidding";
+										break;
+									case "E":
+										lblData.text = "Pending Replace";
+										break;
+								}
+								break;
+							case "handlInst":
+								switch (data.handlInst) {
+									case '1':
+										lblData.text = "DMA-Private";
+										break;
+									case '2':
+										lblData.text = "DMA-Public";
+										break;
+									case '3':
+										lblData.text = "Manual Order";
+										break;
+								}
+								break;
+							
+							case "settlType":
+								switch (data.settlType) {
+									case '1':
+										lblData.text = "PH";
+										break;
+									case '2':
+										lblData.text = "PM";
+										break;
+									case '3':
+										lblData.text = "CN";
+										break;
+								}	
+								break;
+							case "timeInForce":
+								switch (data.timeInForce) {
+									case '0':
+										lblData.text = "Diaria";
+										break;
+									case '1':
+										lblData.text = "Permanente";
+										break;
+									case '3':
+										lblData.text = "o Inmediata o cancelada";
+										break;
+								}		
+								break;
+							default:
+								lblData.text = data[column.dataField] + '';
+						}
+					}	
+					this.setStyle("fontWeight", "normal");
+					if(data.rejected == "1"){
+						this.setStyle("fontWeight", "bold");
+						//this.setStyle("color", "0xFFFF00");
+					}
+					else if(data.ordStatus == "A" || data.ordStatus == "6" || data.ordStatus == "E")
+					{
+						//this.setStyle("color", "0x000FF8");
+						this.setStyle("fontWeight", "bold");
+					}
+					else{
+						//this.setStyle("color", "black");
+						this.setStyle("fontWeight", "normal");
+					}
+						
+						
+					
+				}
+			}
+			
+			override public function set selected(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.selected = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					this.setStyle("color", "0x666666");
+				}
+			}
+			
+			
+			
+			override public function set hovered(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.hovered = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					if(!selected){
+						this.setStyle("color", "0x666666");	
+					}
+					
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Group minHeight="35" width="100%">
+		<s:Label id="lblData" horizontalCenter="0" verticalCenter="0"/>
+		<s:Image id="img" horizontalCenter="0" verticalCenter="0"/>	
+	</s:Group>
+	
+	
+</s:GridItemRenderer>

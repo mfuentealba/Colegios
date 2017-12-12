@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:GridItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+					xmlns:s="library://ns.adobe.com/flex/spark" 
+					xmlns:mx="library://ns.adobe.com/flex/mx" clipAndEnableScrolling="true" textAlign="center">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.larrainvial.gpatrimonial.orders.model.ModelLocator;
+			import com.larrainvial.gpatrimonial.orders.vo.ExecRptVo;
+			
+			import spark.components.DataGrid;
+			private const VERDE:uint = 0x006600;				
+			private const ROJO:uint = 0x660000;
+			
+			private var nf0:NumberFormatterLV = new NumberFormatterLV(0);
+			private var nf5:NumberFormatterLV = new NumberFormatterLV(5);
+			
+			
+			
+			override public function prepare(hasBeenRecycled:Boolean):void {
+				if(data){
+					if(!column.dataField){
+						lblData.text = ExecRptVo(data).transactTime;	
+					} else {
+						lblData.text = data[column.dataField]
+						switch (column.dataField) {
+							case "side":
+								
+								switch (data.side) {
+									case "1":
+										lblData.text = "Buy";
+										break;
+									case "2":
+										lblData.text = "Sell";
+										break;
+									case "c":
+										lblData.text = "Buy To Cover";
+										break;
+									case "5":
+										lblData.text = "Sell Short";
+										break;
+									default:
+										lblData.text = "";
+										break;
+								}
+								break;
+							
+							case "symbol":
+								lblData.text = data.symbol;
+								break;
+							
+							case "avgPx":
+								lblData.text =  nf5.format(Number(String(data.avgPx).replace(",", ".")));
+								break;
+							
+							case "exDestination":
+								lblData.text = data.exDestination;
+								break;
+							
+							case "leavesQty":
+								lblData.text = nf0.format(Number(String(data.leavesQty).replace(",", ".")));
+								break;
+							
+							case "cumQty":
+								lblData.text = nf0.format(Number(String(data.cumQty).replace(",", ".")));
+								break;
+							
+							case "lastQty":
+								lblData.text = nf0.format(Number(String(data.lastQty).replace(",", ".")));
+								break;
+							
+							case "lastPx":
+								lblData.text =  nf5.format(Number(String(data.lastPx).replace(",", ".")));
+								break;
+							
+							case "account":
+								if(ModelLocator.accountNameDictionary[data.account] != null)
+									lblData.text = ModelLocator.accountNameDictionary[data.account].Name;
+								else
+									lblData.text = data.account
+								break;
+							
+							default:
+								lblData.text = "";
+						}	
+					}
+						
+				}
+				
+			}
+			
+			
+			
+			override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void       
+			{            
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+				if(data){
+					var g:Graphics = graphics;             
+					g.clear();      
+					
+					var grid1:DataGrid = DataGrid(this.owner);
+					if(column.dataField == 'side'){
+						if(data.side == "1" || data.side == "c")
+							g.beginFill(VERDE,0.5);
+						else
+							g.beginFill(ROJO,0.5);	
+					}
+					
+					
+					g.drawRect(0, 0, unscaledWidth, unscaledHeight); 
+					g.endFill();	
+				}
+				
+				
+			}
+			
+			
+			
+			
+			override public function set data(value:Object):void        
+			{             
+				super.data = value;
+				
+				if(data is ExecRptVo)
+				{
+					if(data.rejected == "1")
+						this.setStyle("color", "0xFFFF00");
+					else if(data.ordStatus == "A" || data.ordStatus == "6" || data.ordStatus == "E")
+					{
+						this.setStyle("color", "0xFF8000");
+						this.setStyle("fontWeight", "bold");
+					}
+						
+					else
+						this.setStyle("color", "black");
+					this.setStyle("fontWeight", "normal");
+					
+				}
+			}
+			
+			override public function set selected(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.selected = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					this.setStyle("color", "0x333333");
+				}
+			}
+			
+			
+			
+			override public function set hovered(value:Boolean):void
+			{
+				// TODO Auto Generated method stub
+				super.hovered = value;
+				if(value){
+					this.setStyle("color", "0xFFFFFF");	
+				} else {
+					if(!selected){
+						this.setStyle("color", "0x333333");	
+					}
+					
+				}
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:Label id="lblData" top="9" left="7" horizontalCenter="0" verticalCenter="0"/>
+	
+</s:GridItemRenderer>
