@@ -2,7 +2,8 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="336" height="176" title="Periodo" close="fnCerrarPop(event)">
+			   width="336" height="176" title="Periodo" close="fnCerrarPop(event)"
+			   skinClass="assets.skins.TitleWindowCustom">
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -17,7 +18,7 @@
 			
 			import spark.components.TextInput;
 			public var txtPeriodo:TextInput;
-			[Bindable] private var arrMeses:Array = [{label: 'Enero', data: '01'}, {label: 'Febrero', data: '02'}, {label: 'Marzo', data: '03'}, {label: 'Abril', data: '04'}, {label: 'Mayo', data: '05'}, {label: 'Junio', data: '06'}, {label: 'Julio', data: '07'}, {label: 'Agosto', data: '08'}, {label: 'Septiembre', data: '09'}, {label: 'Octubre', data: 10}, {label: 'Noviembre', data: 11}, {label: 'Diciembre', data: 12}];
+			
 			
 			protected function fnActualizarPeriodo(event:MouseEvent):void
 			{
@@ -38,7 +39,7 @@
 			
 		]]>
 	</fx:Script>
-	<s:DropDownList id="ddMes" left="35" top="57" dataProvider="{new ArrayCollection(arrMeses)}"></s:DropDownList>
+	<s:DropDownList id="ddMes" left="35" top="57" dataProvider="{new ArrayCollection(ModelApp.getInstance().arrMeses)}"></s:DropDownList>
 	<s:DropDownList id="ddYear" right="35" top="57" dataProvider="{new ArrayCollection(ModelApp.getInstance().arrYears)}"></s:DropDownList>
 	<s:Label x="34" top="37" text="Mes"/>
 	<s:Label x="187" top="37" text="Año"/>

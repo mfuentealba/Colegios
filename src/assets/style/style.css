@@ -20,17 +20,33 @@ s|DataGrid{
 	skinClass:ClassReference("assets.skins.GridTemaSkin")
 }
 
-s|TitleWindow{
-	backgroundColor: #313D47
+
+s|TitleWindow
+{
+	borderAlpha: 1;
+	borderColor: #323232;
+	cornerRadius: 9;
+	dropShadowVisible: true;
+	backgroundColor: #000000;
+	color: #000000;
+	contentBackgroundColor:#000000;
+	
 }
 
+s|TitleWindow s|Button{
+	color:#000000;	
+	skinClass:ClassReference("assets.skins.ButtonSendLVSkin");
+}
 s|ComboBox{
-	skinClass:ClassReference("assets.skins.ComboBoxLVNoEditSkin")
+	skinClass:ClassReference("assets.skins.ComboBoxLVNoEditSkin");
+	chromeColor: #ffffff;
+	color: #333333;
 }
 
 s|BorderContainer{
 	backgroundColor: #313D47;
 	borderColor: #CCCCCC;
+	
 }
 
 s|Button{

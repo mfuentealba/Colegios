@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
 		 xmlns:s="library://ns.adobe.com/flex/spark" 
-		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:components="components.*">
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:components="components.*" xmlns:views="views.*">
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+		]]>
+	</fx:Script>
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -78,69 +83,22 @@
 				
 			}
 			
-			private function fnMonto(item:Object, column:GridColumn):String{
-				var monto:String = '';
-				switch(column.headerText){
-					case 'Ing. Dev.':
-						if(item.tipo_movimiento == 2 || item.tipo_movimiento == 6){
-							monto = item.monto + '';
-						}
-						break;
-					case 'Gastos':
-						if(item.tipo_movimiento == 3){
-							monto = item.monto + '';
-						}
-						break;
-					case 'Pagos':
-						if(item.tipo_movimiento == 4 || item.tipo_movimiento == 5){
-							monto = item.monto + '';
-						}
-						break;
-					case 'Deuda Mes':
-						if(item.tipo_movimiento == 4){
-							monto = (-item.monto) + '';
-						} else if(item.tipo_movimiento == 6){
-							monto = item.monto + '';
-						} else if(item.tipo_movimiento == 7){
-							monto = item.monto + '';
-						}
-						break;
-					
-				}
-				return monto;
-			}
 			
 			
-			private function fnTipoMovimiento(item:Object, column:GridColumn):String{
-				var txt:String;
-				switch(item.tipo_movimiento){
-					case "1":
-						txt = "Resultado Neto Año Anterior.";
-						break;
-					case "2":
-						txt = "Ingreso de Recursos Monetarios";
-						break;
-					case "3":
-						txt = "Gasto Efectuado";
-						break;
-					case "4":
-						txt = "Pago de Gasto o Deuda";
-						break;
-					case "5":
-						txt = "Egreso de Dineros";
-						break;
-					case "6":
-						txt = "Aporte Provisorio";
-						break;
-					case "7":
-						txt = "Retenciones Adeudadas";
-						break;
-				}
-				return txt;
-			}
+			
+			
 			
 			private var saldoCaja:int = 0;
 			
+			protected function dgStagging_rollOverHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var i:int = DataGrid(event.target).grid.hoverRowIndex;
+				var j:int = DataGrid(event.target).grid.hoverColumnIndex;
+				if(i > -1 && j > -1){
+					DataGrid(event.target).grid
+				}
+			}
 			
 			/*private function fnSaldos(item:Object, column:GridColumn):String{
 				var txt:String;
@@ -164,31 +122,30 @@
 	</fx:Script>
 	<fx:Binding source="dgMov.selectedItem" destination="fnSelectedMov"/>
 	<s:layout>
-		<s:VerticalLayout paddingLeft="5" paddingRight="5"/>
+		<s:VerticalLayout paddingLeft="5" paddingRight="5" horizontalAlign="right"/>
 	</s:layout>
 	<s:HGroup paddingTop="5" paddingLeft="5" paddingRight="5" width="100%">
 		<s:VGroup width="40%">
 			<s:Label x="23" top="5" fontWeight="bold" text="Filtros"/>
-			<s:BorderContainer x="10" y="19" width="100%" height="85" cornerRadius="5">
-				<s:VGroup left="5" top="5" width="143">
-					<s:Group width="100%">
-						<s:Label verticalCenter="0" text="Desde"/>
-						<mx:DateField right="0" top="0"/>
-					</s:Group>
-					<s:Group width="100%">
-						<s:Label verticalCenter="0" text="Hasta" />		
-						<mx:DateField right="0" top="0"/>
-					</s:Group>
-				</s:VGroup>
-				<s:Group x="181" y="7">
+			<s:BorderContainer x="10" y="19" width="100%" cornerRadius="5">
+				<s:layout>
+					<s:HorizontalLayout paddingBottom="5" paddingTop="5" paddingLeft="5" paddingRight="5" verticalAlign="middle"/>
+				</s:layout>
+				
 					
-					<s:Label x="32" verticalCenter="0" text="Tipo Movimiento"/>
-					<s:DropDownList x="132" verticalCenter="0" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion" skinClass="assets.skins.DropDownSkin"></s:DropDownList>
-				</s:Group>
-				<s:Button x="353" y="49" label="Buscar" click="fnBuscar()"/>
+				<s:Label verticalCenter="0" text="Mes"/>
+				<s:ComboBox dataProvider="{new ArrayCollection(modelApp.arrMeses)}"/> 
+			
+				<s:Label verticalCenter="0" text="Año" />		
+				<s:ComboBox dataProvider="{new ArrayCollection(modelApp.arrYears)}"/>
+				
+				<s:Button label="Buscar" click="fnBuscar()"/>
+				
+				
+				
 			</s:BorderContainer>	
 		</s:VGroup>
-		<s:VGroup width="40%">
+		<!--<s:VGroup width="40%">
 			<s:Label x="465" top="5" fontWeight="bold" text="Detalle"/>
 			<s:BorderContainer x="458" y="19" width="100%" height="85" cornerRadius="5">
 				<s:Label x="10" y="10" fontSize="15" text="{selectedMov.glosa}"/>
@@ -203,20 +160,20 @@
 				<s:Label x="332" y="61" text="Cuenta:"/>
 				<s:Label x="395" y="61" text="{selectedMov.cod_cuenta}"/>
 			</s:BorderContainer>	
-		</s:VGroup>
+		</s:VGroup>-->
 		<s:VGroup width="20%">
-			<s:Label x="916" top="5" fontWeight="bold" text="Acción"/>
-			<s:BorderContainer width="100%" height="85" cornerRadius="5">
+			<s:Label fontWeight="bold" text="Acción"/>
+			<s:BorderContainer width="100%" cornerRadius="5">
 				<s:layout>
 					<s:HorizontalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"/>
 				</s:layout>
 				
-				<s:Button width="100%" height="72" label="Ingresar" click="fnIngresarMov(event)"/>
-				<s:VGroup gap="5" 
-						  horizontalAlign="left" verticalAlign="top">
-					<s:Button x="93" y="0" height="33" label="Editar" click="fnIngresarMov(event)"/>
-					<s:Button x="93" y="49" height="34" label="Eliminar" click="fnEliminar(event)"/>	
-				</s:VGroup>
+				<s:Button width="100%" label="Ingresar" click="fnIngresarMov(event)"/>
+				<!--<s:VGroup gap="5" 
+						  horizontalAlign="left" verticalAlign="top">-->
+					<s:Button label="Editar" click="fnIngresarMov(event)"/>
+					<s:Button label="Eliminar" click="fnEliminar(event)"/>	
+				<!--</s:VGroup>-->
 				
 				
 			</s:BorderContainer>	
@@ -227,7 +184,7 @@
 		
 		
 	</s:HGroup>
-	<s:HGroup width="100%" gap="20">
+	<s:HGroup width="100%" gap="20" horizontalAlign="right">
 		<!--<s:Label text="Periodo Anterior:     " fontWeight="bold" fontSize="18" width="50%"/>
 		<s:HGroup width="10%" height="100%" verticalAlign="middle">
 			<s:Label text="Saldo Caja:" fontWeight="bold"/>
@@ -242,29 +199,37 @@
 			<s:Label text="{modelApp.resultado}"/>	
 		</s:HGroup>-->
 		
-		<components:InfoMarket texto="Periodo" saldo="{modelApp.saldoCaja}" deuda="{modelApp.deuda}" resultado="{modelApp.resultado}" colorFondo="#889F50" height="30" width="100%"/>
+		<components:InfoMarket texto="Periodo Anterior" saldo="{modelApp.saldoCaja}" deuda="{modelApp.deuda}" resultado="{modelApp.resultado}" colorFondo="#889F50" height="30" width="70%"/>
 		
 		
 	</s:HGroup>
-	<s:DataGrid id="dgMov" width="100%" height="100%" requestedRowCount="4" dataProvider="{modelApp.arrMovimiento}">
-		<s:columns>
-			<s:ArrayList>
-				<s:GridColumn dataField="fec_mvto" headerText="Fecha"></s:GridColumn>
-				<s:GridColumn labelFunction="fnTipoMovimiento" headerText="Tipo Movimiento"></s:GridColumn>
-				<s:GridColumn dataField="tipo_documento" headerText="Tipo Doc"></s:GridColumn>
-				<s:GridColumn dataField="nro_doc" headerText="N° Documento"></s:GridColumn>
-				<s:GridColumn headerText="Ing. Dev." labelFunction="fnMonto"></s:GridColumn>
-				<s:GridColumn headerText="Gastos" labelFunction="fnMonto"></s:GridColumn>
-				<s:GridColumn headerText="Pagos" labelFunction="fnMonto"></s:GridColumn>
-				<s:GridColumn headerText="Deuda Mes" dataField="deuda"></s:GridColumn>
-				<s:GridColumn dataField="saldoCaja" headerText="Saldo Caja"></s:GridColumn>
-				<s:GridColumn dataField="deudaAcum" headerText="Deuda Acum."></s:GridColumn>
-				<s:GridColumn dataField="resultado" headerText="Resultado"></s:GridColumn>
-				<s:GridColumn dataField="financiamiento.descripcion" headerText="Fuente Financiera"></s:GridColumn>
-			</s:ArrayList>
-		</s:columns>
-		
-	</s:DataGrid>
+	<s:HGroup width="100%" horizontalAlign="right" height="100%">
+		<!--<views:IngresoCompromiso width="25%" height="100%">
+			
+		</views:IngresoCompromiso>-->
+		<s:DataGrid id="dgMov" width="100%" height="100%" requestedRowCount="4" dataProvider="{modelApp.arrMovimiento}"
+					rollOverColor="#999999" selectionColor="#555555"  alternatingRowColors="[0xeeeeee,0xffffff]"
+					rollOver="dgStagging_rollOverHandler(event)">
+			<s:columns>
+				<s:ArrayList>
+					<s:GridColumn dataField="fec_mvto" headerText="Fecha" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn headerText="Tipo Movimiento" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="tipo_documento" headerText="Tipo Doc" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="nro_doc" headerText="N° Documento" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn headerText="Ing. Dev."  itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn headerText="Gastos" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn headerText="Pagos"  itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn headerText="Deuda Mes" dataField="deuda" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="saldoCaja" headerText="Saldo Caja" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="deudaAcum" headerText="Deuda Acum." itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="resultado" headerText="Resultado" itemRenderer="components.RenderStagging"></s:GridColumn>
+					<s:GridColumn dataField="financiamiento.descripcion" headerText="Fuente Financiera" itemRenderer="components.RenderStagging"></s:GridColumn>
+				</s:ArrayList>
+			</s:columns>
+			
+		</s:DataGrid>
+	</s:HGroup>
+	
 	
 	
 	

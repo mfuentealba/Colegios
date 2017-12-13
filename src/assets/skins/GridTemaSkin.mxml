@@ -132,13 +132,13 @@ declarations define DataGrid skin parts except <code>headerColumnSeparator</code
         </fx:Component>
         
         <!--- @private -->
-        <!--<fx:Component id="columnSeparator">
+        <fx:Component id="columnSeparator">
             <s:Line width="0">
                 <s:stroke>
                     <s:SolidColorStroke color="0xE6E6E6" weight="0" caps="square"/>
                 </s:stroke>
             </s:Line>
-        </fx:Component>-->
+        </fx:Component>
         
         <!--- Defines the value of the columnSeparator property for the columnHeaderGroup. -->
         <!--<fx:Component id="headerColumnSeparator">

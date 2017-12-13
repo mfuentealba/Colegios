@@ -108,7 +108,7 @@ in accordance with the terms of the license agreement accompanying it.
 	<!--- @private -->
 	<s:Rect id="fill" left="1" right="1" top="1" bottom="1" radiusX="0">
 		<s:fill>
-			<s:SolidColor color="0xF34758" color.over="0xf16a77" color.down="0xa52532"/>
+			<s:SolidColor color="0x888888" color.over="0xf16a77" color.down="0xa52532"/>
 			<!--<s:LinearGradient rotation="90">
 				<s:GradientEntry color="0xF34758" color.over="0xf16a77" color.down="0xa52532" alpha="0" />
 				<s:GradientEntry color="0xF34758" color.over="0xf16a77" color.down="0xa52532" alpha="0" />

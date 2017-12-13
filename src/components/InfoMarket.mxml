@@ -9,16 +9,17 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.events.FlexEvent;
-			public var colorFondo:String;
+			[Bindable]public var colorFondo:String;
 			[Bindable] public var saldo:String;
 			[Bindable] public var deuda:String;
 			[Bindable] public var resultado:String;
 			[Bindable] public var texto:String;
 			
 			private function set fnColor(val:String):void{
-				/*lblTexto.setStyle("backgroundColor", colorFondo);
-				lblQty.setStyle("color", colorFondo);
-				lblPx.setStyle("color", colorFondo);*/
+				lblTexto.setStyle("backgroundColor", colorFondo);
+				lblQty.setStyle("color", Number(deuda) < 0 ? 'RED' : 0x444444);
+				lblPx.setStyle("color", 0x444444);
+				lblResultado.setStyle("color", 0x444444);
 			}
 			
 			
@@ -26,11 +27,11 @@
 		]]>
 	</fx:Script>	
 	<fx:Binding source="saldo" destination="fnColor"/>
-	<s:Label id="lblTexto" text="{texto}" color="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="20%" fontWeight="bold"/>
+	<s:Label id="lblTexto" text="{texto}" color="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="20%" fontWeight="bold" height="100%"/>
 	<s:Label text="Saldo Caja: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblQty" text="{saldo}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+	<s:Label id="lblQty" text="{saldo}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
 	<s:Label text="Deuda: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblPx" text="{deuda}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+	<s:Label id="lblPx" text="{deuda}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
 	<s:Label text="Resultado: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblResultado" text="{resultado}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%"/>
+	<s:Label id="lblResultado" text="{resultado}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
 </s:HGroup>
