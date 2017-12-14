@@ -104,7 +104,7 @@
             
             <!-- close button -->
             <!--- @copy spark.components.TitleWindow#closeButton -->
-            <s:Button id="closeButton" skinClass="spark.skins.wireframe.TitleWindowCloseButtonSkin"
+            <s:Button id="closeButton"
                       width="15" height="15" right="2" top="3" />
         </s:Group>
 

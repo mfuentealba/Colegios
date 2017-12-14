@@ -108,7 +108,7 @@ in accordance with the terms of the license agreement accompanying it.
 	<!--- @private -->
 	<s:Rect id="fill" left="1" right="1" top="1" bottom="1" radiusX="0">
 		<s:fill>
-			<s:SolidColor color="0x888888" color.over="0xf16a77" color.down="0xa52532"/>
+			<s:SolidColor color="#313D47" color.over="#475060" color.down="0x555867"/>
 			<!--<s:LinearGradient rotation="90">
 				<s:GradientEntry color="0xF34758" color.over="0xf16a77" color.down="0xa52532" alpha="0" />
 				<s:GradientEntry color="0xF34758" color.over="0xf16a77" color.down="0xa52532" alpha="0" />
@@ -121,9 +121,9 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Rect id="lowlight" left="1" right="1" top="1" bottom="1" radiusX="0" visible="false" includeInLayout="false">
 		<s:fill>
 			<s:LinearGradient rotation="270">
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" />
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" />
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" />
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" />
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" />
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" />
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
@@ -133,9 +133,9 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Rect id="highlight" left="1" right="1" top="1" bottom="1" radiusX="0" visible="false" includeInLayout="false">
 		<s:fill>
 			<s:LinearGradient rotation="90">
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" alpha.over="0" alpha.down="0"/>
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" alpha.over="0" alpha.down="0" />
-				<s:GradientEntry color="0xF34758" ratio="0" alpha="1" />
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" alpha.over="0" alpha.down="0"/>
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" alpha.over="0" alpha.down="0" />
+				<s:GradientEntry color="0x313D47" ratio="0" alpha="1" />
 			</s:LinearGradient>
 		</s:fill>
 	</s:Rect>
@@ -156,11 +156,11 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Rect id="hldownstroke1" left="1" right="1" top="1" bottom="1" radiusX="0" includeIn="down">
 		<s:stroke>
 			<s:LinearGradientStroke rotation="90" weight="1">
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>
@@ -168,8 +168,8 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Rect id="hldownstroke2" left="2" right="2" top="2" bottom="2" radiusX="0" includeIn="down">
 		<s:stroke>
 			<s:LinearGradientStroke rotation="90" weight="1">
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
-				<s:GradientEntry color="0xF34758" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
+				<s:GradientEntry color="0x313D47" alpha="1" ratio="0" />
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>
@@ -179,8 +179,8 @@ in accordance with the terms of the license agreement accompanying it.
 	<s:Rect id="border" left="0" right="0" top="0" bottom="0" width="69" height="35" radiusX="0">
 		<s:stroke>
 			<s:LinearGradientStroke rotation="90" weight="1">
-				<s:GradientEntry color="0xF34758" alpha="1" alpha.down="1" />
-				<s:GradientEntry color="0xF34758" alpha="1" alpha.down="1" />
+				<s:GradientEntry color="0x313D47" alpha="1" alpha.down="1" />
+				<s:GradientEntry color="0x313D47" alpha="1" alpha.down="1" />
 			</s:LinearGradientStroke>
 		</s:stroke>
 	</s:Rect>

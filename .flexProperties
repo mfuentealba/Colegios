@@ -1,2 +1,2 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<flexProperties enableServiceManager="false" flexServerFeatures="0" flexServerType="16" serverContextRoot="" serverRoot="d:/xampp/htdocs/weborb" serverRootURL="http://localhost:9999/weborb" toolCompile="true" useServerFlexSDK="false" version="2"/>
+<flexProperties enableServiceManager="false" flexServerFeatures="0" flexServerType="16" serverContextRoot="" serverRoot="c:/xampp/htdocs/weborb" serverRootURL="http://localhost:9999/weborb" toolCompile="true" useServerFlexSDK="false" version="2"/>
