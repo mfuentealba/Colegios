@@ -50,12 +50,14 @@
 				this.maximize();
 			}
 			
-			private function fnSaldoNuevo():void{
+			public function fnSaldoNuevo(fecha:String):void{
 				var pop:IngresoMovimiento = new IngresoMovimiento();				
 				
 				pop.esSaldo = true;
+				pop.fecha = fecha;
 				PopUpManager.addPopUp(pop, FlexGlobals.topLevelApplication as DisplayObject, true);
 				PopUpManager.centerPopUp(pop);
+				
 				pop.fnPost = viewGeneral.fnBuscar;
 				pop.currentState = 'saldo'
 			}

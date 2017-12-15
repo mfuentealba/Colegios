@@ -3,6 +3,8 @@ package listeners
 	
 	
 	
+	import controlador.Controller;
+	
 	import events.MovimientoEvent;
 	
 	import flash.events.Event;
@@ -17,6 +19,7 @@ package listeners
 	
 	import services.ServiceRO;
 	
+	import vo.MovimientoSaldoVO;
 	import vo.MovimientoVO;
 	
 	
@@ -34,7 +37,7 @@ package listeners
 			evento = MovimientoEvent(_evento);
 			switch(evento.type){
 				case MovimientoEvent.LISTAR:
-					rmtObjMovimiento.getAllMovimiento();
+					rmtObjMovimiento.getAllMovimiento(evento.filtros.periodo);
 					
 					break;
 				case MovimientoEvent.CREAR:
@@ -89,11 +92,14 @@ package listeners
 					break;
 				case MovimientoEvent.PERIODO_ANTERIOR:
 					if(data.result == null){
-						evento.callback.call(null);
+						evento.callback.call(null, evento.filtros.fecha);
 					} else {
+						modelApp.periodo = data.result as MovimientoSaldoVO;
 						modelApp.saldoCaja = data.result.saldo_caja;
 						modelApp.deuda = data.result.deuda_acumulada;
 						modelApp.resultado = data.result.resultado;
+						var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, {periodo: Number(modelApp.periodo.id) + 1});
+						Controller.getInstance().dispatchEvent(ev);
 					}
 					break;
 			}

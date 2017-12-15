@@ -31,12 +31,19 @@ s|TitleWindow
 	color: #000000;
 	
 	
+	
 }
 
 s|TitleWindow s|Button{
 	color:#000000;	
-	skinClass:ClassReference("assets.skins.ButtonSendLVSkin");
+	/*skinClass:ClassReference("assets.skins.ButtonSendLVSkin");*/
 }
+
+s|TitleWindow s|ComboBox{
+	borderColor: #333333;
+	skinClass:ClassReference("spark.skins.spark.ComboBoxSkin")
+}
+
 s|ComboBox{
 	skinClass:ClassReference("assets.skins.ComboBoxLVNoEditSkin");
 	chromeColor: #ffffff;
@@ -50,7 +57,7 @@ s|BorderContainer{
 }
 
 s|Button{
-	skinClass:ClassReference("assets.skins.OCbtnLimpiar");
+	skinClass:ClassReference("assets.skins.ButtonCustomSkin"/*assets.skins.OCbtnLimpiar"*/);
 	color:#FFFFFF;	
 	fontWeight:bold;
 	

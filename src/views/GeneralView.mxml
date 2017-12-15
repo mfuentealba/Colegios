@@ -5,6 +5,25 @@
 	<fx:Script>
 		<![CDATA[
 			import mx.collections.ArrayCollection;
+			import mx.events.FlexEvent;
+			
+			protected function button1_rollOverHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+			}
+			
+			protected function cbYear_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				var fecha:String = (new Date()).fullYear + '';
+				for each(var obj:Object in modelApp.arrYears){
+					if(obj.data == fecha){
+						cbYear.selectedItem = obj;
+					}
+				}
+			}
+			
 		]]>
 	</fx:Script>
 	<fx:Declarations>
@@ -46,8 +65,15 @@
 			}
 			
 			public function fnBuscar():void{
-				var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, null);
-				Controller.getInstance().dispatchEvent(ev);
+				var fecha:String = (Number(cbYear.selectedItem.data) - 1) + '';
+				if(fecha != modelApp.periodo.id){
+					var evMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.PERIODO_ANTERIOR, FlexGlobals.topLevelApplication.fnSaldoNuevo, null, {fecha: fecha});
+					Controller.getInstance().dispatchEvent(evMov);
+				} else {
+					var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, {periodo: (cbMes.selectedItem.data == '00' ? '' : cbMes.selectedItem.data) + '-' + cbYear.selectedItem.data});
+					Controller.getInstance().dispatchEvent(ev);	
+				}
+				
 				
 			}
 			
@@ -134,12 +160,12 @@
 				
 					
 				<s:Label verticalCenter="0" text="Mes"/>
-				<s:ComboBox dataProvider="{new ArrayCollection(modelApp.arrMeses)}"/> 
+				<s:ComboBox id="cbMes" dataProvider="{new ArrayCollection(modelApp.arrMeses)}" selectedIndex="0"/> 
 			
 				<s:Label verticalCenter="0" text="Año" />		
-				<s:ComboBox dataProvider="{new ArrayCollection(modelApp.arrYears)}"/>
+				<s:ComboBox id="cbYear" dataProvider="{new ArrayCollection(modelApp.arrYears)}" creationComplete="cbYear_creationCompleteHandler(event)"/>
 				
-				<s:Button label="Buscar" click="fnBuscar()"/>
+				<s:Button label="Buscar" height="100%" rollOver="button1_rollOverHandler(event)" click="fnBuscar()" skinClass="assets.skins.ButtonCustomSkin"/>
 				
 				
 				
@@ -163,16 +189,16 @@
 		</s:VGroup>-->
 		<s:VGroup width="20%">
 			<s:Label fontWeight="bold" text="Acción"/>
-			<s:BorderContainer width="100%" cornerRadius="5">
+			<s:BorderContainer width="100%" height="37" cornerRadius="5">
 				<s:layout>
 					<s:HorizontalLayout paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"/>
 				</s:layout>
 				
-				<s:Button width="100%" label="Ingresar" click="fnIngresarMov(event)"/>
+				<s:Button width="100%" label="Ingresar" click="fnIngresarMov(event)" height="100%"/>
 				<!--<s:VGroup gap="5" 
 						  horizontalAlign="left" verticalAlign="top">-->
-					<s:Button label="Editar" click="fnIngresarMov(event)"/>
-					<s:Button label="Eliminar" click="fnEliminar(event)"/>	
+					<s:Button label="Editar" click="fnIngresarMov(event)" height="100%"/>
+					<s:Button label="Eliminar" click="fnEliminar(event)" height="100%"/>	
 				<!--</s:VGroup>-->
 				
 				
