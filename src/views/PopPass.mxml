@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="400" height="232" title="Cambio de password" close="fnCerrar(event)">
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.ProveedoresEvent;
+			import events.UserEvent;
+			
+			import modelo.ModelApp;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import vo.ProveedorVO;
+			import vo.UserVO;
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			protected function fnCerrar(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function fnGuardar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(txtPass.text != modelApp.userVO.pass){
+					Alert.show("Password actual es incorrecto", "Error");
+					return;
+				}
+				
+				if(txtNew.text != txtRep.text){
+					Alert.show("Password nuevo no coincide", "Error");
+					return;
+				}
+				
+				var evIngresar:UserEvent = new UserEvent(UserEvent.CAMBIO_PASS, null);
+				evIngresar.userVO = new UserVO();				
+				evIngresar.userVO.user = modelApp.userVO.user;
+				evIngresar.userVO.pass = txtNew.text;
+				evIngresar.callback = fnResult; 
+				Controller.getInstance().dispatchEvent(evIngresar);
+				
+			}
+			
+			private function fnResult(obj:UserVO):void{
+				modelApp.userVO = obj
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	
+	<s:Form left="20" right="20" top="5" height="119" color="#000000">
+		<s:FormItem label="Password actual">
+			<s:TextInput id="txtPass" displayAsPassword="true"/>
+		</s:FormItem>
+		<s:FormItem label="Nuevo">
+			<s:TextInput id="txtNew" displayAsPassword="true"/>
+		</s:FormItem>
+		<s:FormItem label="Repetir">
+			<s:TextInput id="txtRep" displayAsPassword="true"/>
+		</s:FormItem>
+	</s:Form>
+	<s:Button bottom="6" width="113" height="31" label="Actualizar" click="fnGuardar(event)"
+			  fontWeight="bold" horizontalCenter="0"/>
+</s:TitleWindow>

@@ -3,7 +3,7 @@
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
 			   width="336" height="176" title="Periodo" close="fnCerrarPop(event)"
-			   skinClass="assets.skins.TitleWindowCustom">
+			   >
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -41,7 +41,7 @@
 	</fx:Script>
 	<s:DropDownList id="ddMes" left="35" top="57" dataProvider="{new ArrayCollection(ModelApp.getInstance().arrMeses)}"></s:DropDownList>
 	<s:DropDownList id="ddYear" right="35" top="57" dataProvider="{new ArrayCollection(ModelApp.getInstance().arrYears)}"></s:DropDownList>
-	<s:Label x="34" top="37" text="Mes"/>
-	<s:Label x="187" top="37" text="Año"/>
+	<s:Label x="34" top="37" text="Mes" color="#333333"/>
+	<s:Label x="187" top="37" text="Año" color="#333333"/>
 	<s:Button x="132" y="116" label="Aceptar" click="fnActualizarPeriodo(event)"/>
 </s:TitleWindow>

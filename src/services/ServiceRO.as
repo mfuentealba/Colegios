@@ -13,6 +13,15 @@ package services
 			return rmtObj;
 		}
 		
+		public static function fnRmtObjUser():CustomRemoteObject{
+			var rmtObj:CustomRemoteObject = new CustomRemoteObject("GenericDestination");
+			rmtObj.source = 'Weborb.ContaColegio.UserService';
+			rmtObj.showBusyCursor = true;
+			return rmtObj;
+		}
+		
+		
+		
 		public static function fnRmtObjMovimiento():CustomRemoteObject{
 			var rmtObj:CustomRemoteObject = new CustomRemoteObject("GenericDestination");
 			rmtObj.source = 'Weborb.ContaColegio.MovimientoService';

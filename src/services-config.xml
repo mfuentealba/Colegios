@@ -78,7 +78,14 @@
           <source>Weborb.contaColegio.MovimientoService</source>
         </properties>
       </destination>
-      
+      <destination id="UserService">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.UserService</source>
+        </properties>
+      </destination>
       
       <destination id="MovimientoVO">
         <channels>
@@ -88,6 +95,17 @@
           <source>Weborb.contaColegio.MovimientoVO</source>
         </properties>
       </destination>
+      
+      <destination id="MovimientoAsociacionVO">
+        <channels>
+          <channel ref="my-amf"/>
+        </channels>
+        <properties>
+          <source>Weborb.contaColegio.MovimientoAsociacionVO</source>
+        </properties>
+      </destination>
+      
+      
       
       
       <destination id="GenericDestination">

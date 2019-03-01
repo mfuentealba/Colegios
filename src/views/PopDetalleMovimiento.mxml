@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="400" height="542" close="fnCerrar(event)" creationComplete="fnIni(event)"
+			   currentState="inicial" keyUp="fnSalir(event)" title="Detalle Movimiento"
+			   width.inicial="700" height.inicial="700"
+			   height.saldo="292" title.saldo="Ingrese saldo anterior">
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.MovimientoEvent;
+			
+			import modelo.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.controls.dataGridClasses.DataGridColumn;
+			import mx.core.FlexGlobals;
+			import mx.events.CalendarLayoutChangeEvent;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.events.IndexChangeEvent;
+			import spark.events.TextOperationEvent;
+			
+			import vo.MovimientoAsociacionVO;
+			import vo.MovimientoSaldoVO;
+			import vo.MovimientoVO;
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			[Bindable] public var movVO:MovimientoVO;
+			[Bindable] public var esSaldo:Boolean;
+			[Bindable] public var asoc:Boolean;
+			[Bindable] public var asocMov:Boolean;
+			public var fnPost:Function;
+			public var fnBotonEjecuta:Function;
+			[Bindable] private var txtLeyenda:String = 'Monto';
+			[Bindable] public var fp:Boolean;
+			[Bindable] public var fecha:String;
+			
+			[Bindable] private var arrYears:Array = [{label: 2016, data: 2016}, {label: 2017, data: 2017}, {label: 2018, data: 2018}, {label: 2019, data: 2019}, {label: 2020, data: 2020}, {label: 2021, data: 2021}, {label: 2022, data: 2022}, {label: 2023, data: 2023}];
+			
+			protected function fnCerrar(event:CloseEvent = null):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			
+			
+			
+			
+			protected function fnCreado(obj:*):void{
+				if(obj is String){
+					Alert.show(obj, "Error de registro");
+					return;
+				} 
+				fnPost.call(null);
+				fnBotonEjecuta.call(null);
+				
+			}
+			
+			
+			protected function fnIngresarProveedor(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:PopProveedorIng = new PopProveedorIng();
+				PopUpManager.addPopUp(pop, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(pop);
+			}
+			
+			
+			
+			
+			
+			protected function fnIni(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				
+				txtGlosa.text = movVO.glosa;
+				dfFecMov.text = movVO.fec_mvto;
+				ddTipoMov.text = modelApp.objTipoMovimiento[movVO.tipo_movimiento].descripcion;
+				
+				fnLeyendaMonto(modelApp.objTipoMovimiento[movVO.tipo_movimiento].id);
+				
+				ddTipoDoc.text = modelApp.objTipoDocumento[movVO.tipo_documento].descripcion;
+				txtDocto.text = movVO.nro_doc + '';
+				cbProveedor.text = modelApp.objProveedor[movVO.id_proveedor].rut;
+				txtNombreProveedor.text = modelApp.objProveedor[movVO.id_proveedor].nombre
+				ddFuenteFinanciera.text = movVO.id_fuente_financiera == 0 ? "" : modelApp.objFinanciamiento[movVO.id_fuente_financiera].descripcion;
+				txtMonto.text = modelApp.nf.formatNumber(movVO.monto) + '';
+				txtPendiente.text = modelApp.nf.formatNumber(movVO.monto) + '';
+				txtCodCuenta.text = movVO.cod_cuenta;
+				txtCodContable.text = movVO.cod_contable;
+				txtPeriodo.text = movVO.periodo;
+				txtAsociado.text = movVO.asociado == 0 ? '' : modelApp.objMovimiento[movVO.asociado].glosa;
+				if(modelApp.objFormaPago.hasOwnProperty(movVO.forma_pago)){
+					ddFormaPago.text = modelApp.arrFormaPago[modelApp.objFormaPago[movVO.forma_pago]];	
+				} else {
+					ddFormaPago.text = 'No definida';
+				}
+				
+				if(movVO.asociado > 0){
+					asoc = true;
+				} else {
+					asoc = false;
+				}
+				if(modelApp.objTipoMovimiento[movVO.tipo_movimiento].id == 3 || modelApp.objTipoMovimiento[movVO.tipo_movimiento].id == 5){
+					var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.MOVIMIENTOS_DEPENDIENTES, fnMovAsoc, null, {id: movVO.id});
+					Controller.getInstance().dispatchEvent(ev);
+				}
+				
+				
+			}
+			
+			
+			
+			protected function fnMovAsoc(arr:ArrayCollection):void{
+				dg.dataProvider = arr;
+				var saldado:int = 0;
+				for each(var obj:* in arr){
+					saldado += obj.saldo;
+				}
+				txtPendiente.text = modelApp.nf.formatNumber((Number(txtPendiente.text.split('.').join('')) - saldado)) + '';
+			}
+			
+			
+			
+			protected function fnLeyendaMonto(newIndex:int):void
+			{
+				// TODO Auto-generated method stub
+				if(newIndex == 2 || newIndex == 3 || newIndex == 6){
+					gFinanciamiento.visible = true;
+					gFinanciamiento.includeInLayout = true;
+				} else {
+					gFinanciamiento.visible = false;
+					gFinanciamiento.includeInLayout = false;
+				}
+				
+				
+				
+				switch(newIndex){
+					/*case 0:
+						txtLeyenda = 'Saldo de Caja';
+						fp = false;
+						currentState = 'saldo';
+						break;*/
+					case 2:
+						txtLeyenda = 'Ingreso o Entrada, de $$$';
+						fp = false;
+						asocMov = false;
+						currentState = 'inicial';
+						
+						break;
+					case 3:
+						txtLeyenda = 'Gasto Efectuado';
+						fp = false;
+						asocMov = true;
+						currentState = 'inicial';
+						break;
+					case 4:
+						txtLeyenda = 'Pago de Gasto o Deuda';
+						currentState = 'inicial';
+						asocMov = false;
+						fp = true;
+						break;
+					case 5:
+						txtLeyenda = 'Egreso de Dineros';
+						currentState = 'inicial';
+						asocMov = true;
+						fp = true;
+						break;
+					case 6:
+						txtLeyenda = 'Ingr. por Prestamo o Aporte Provisorio';
+						fp = false;
+						asocMov = false;
+						currentState = 'inicial';
+						break;
+					case 7:
+						txtLeyenda = 'Retenciones Adeudadas';
+						fp = false;
+						asocMov = false;
+						currentState = 'inicial';
+						break;
+					
+					default:
+						txtLeyenda = 'Monto';
+						fp = false;
+						asocMov = false;
+						currentState = 'inicial';
+				}
+			}
+			
+			
+			protected function dfFecMov_changeHandler(event:CalendarLayoutChangeEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				txtPeriodo.text = dfFecMov.text.substr(3);
+			}
+			
+			protected function fnSalir(event:KeyboardEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			private function fnConfirmarSalir(ev:CloseEvent):void{
+				if(ev.detail == Alert.OK){
+					fnPost.call(null);
+					PopUpManager.removePopUp(this);
+				}
+			}
+			
+			
+			private function fnFormato(item:Object, col:GridColumn):String{
+				return modelApp.nf.formatNumber(item.saldo);
+			}
+			
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="inicial"/>
+		<s:State name="saldo"/>
+	</s:states>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout paddingLeft="5" paddingRight="5" paddingBottom="20" horizontalAlign="center"/>
+	</s:layout>
+	<s:Form width="100%">
+		<s:FormItem width="100%" includeIn="inicial" label="Tipo de Movimiento">
+			<s:Label id="ddTipoMov" verticalCenter="0" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Movimiento Asociado " width="100%" height="23" visible="{asoc}" includeInLayout="{asoc}">
+			<s:Label id="txtAsociado" width="100%" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Fecha Movimiento" width="100%" height="23">
+			<s:Label id="dfFecMov" verticalCenter="0" right="0"/>
+		</s:FormItem>
+		<s:FormItem label="Periodo" width="100%" height="23">
+			<s:Label width="110" id="txtPeriodo"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Glosa" width="100%" height="23">
+			<s:Label id="txtGlosa" width="100%" height="46" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Tipo Documento" width="100%" height="23">
+			<s:Label id="ddTipoDoc" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="N° de Documento" width="100%" height="23">
+			<s:Label id="txtDocto" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Rut Proveedor" width="100%" height="23">
+			<s:Label id="cbProveedor" width="109" right="46"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Nombre Proveedor" width="100%" height="23">
+			<s:Label id="txtNombreProveedor" verticalCenter="0" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" label="Fuente financiera" width="100%" height="23" id="gFinanciamiento">
+			<s:Label id="ddFuenteFinanciera" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem width="100%" height="23" label="{txtLeyenda}">
+			<s:HGroup width="100%" height="100%">
+				<s:Label id="txtMonto" width="155" right="0"/>
+				<s:HGroup width="100%" height="100%" visible="{asocMov}" includeInLayout="{asocMov}">
+					<s:Label text="Pendiente"/>
+					<s:Label id="txtPendiente" width="155" right="0"/>		
+				</s:HGroup>
+			</s:HGroup>
+			
+		</s:FormItem>
+		<s:FormItem width="100%" height="23" visible="{fp}" includeInLayout="{fp}" label="Forma de Pago">
+			<s:Label id="ddFormaPago" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="saldo" width="100%" height="23" label="Deuda Acumulada">
+			<s:Label id="txtMonto0" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="saldo" width="100%" height="23" label="Resultado Neto">
+			<s:Label id="txtMonto1" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" width="100%" height="23" label="Cod Cuenta">
+			<s:Label id="txtCodCuenta" width="155" right="0"/>
+		</s:FormItem>
+		<s:FormItem includeIn="inicial" width="100%" height="23" label="Cod contable">
+			<s:Label id="txtCodContable" width="155" right="0"/>
+		</s:FormItem>
+		
+			
+		
+	</s:Form>
+	<!--<s:Group height="100%"/>-->
+	<s:DataGrid id="dg" includeIn="inicial" left="5" right="5" height="100%" width="100%" requestedRowCount="4" visible="{asocMov}">
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="glosa" headerText="Glosa"></s:GridColumn>
+				<s:GridColumn dataField="fec_mvto" headerText="Fecha"></s:GridColumn>
+				<s:GridColumn labelFunction="fnFormato" headerText="Monto"></s:GridColumn>
+			</s:ArrayList>
+		</s:columns>
+		
+	</s:DataGrid>
+		
+		
+			<s:Button label="OK" width="50%" left="0" height="50" bottom="10" click="fnSalir(null)"/>
+			
+			
+			
+		
+	
+</s:TitleWindow>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:NavigatorContent xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="960" height="484" xmlns:components="components.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.UserEvent;
+			
+			import vo.UserVO;
+			protected function fnLogin(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var ev:UserEvent = new UserEvent(UserEvent.LOGIN);
+				ev.userVO = new UserVO();
+				ev.userVO.user = txtUser.text;
+				ev.userVO.pass = txtPass.text;
+				Controller.getInstance().dispatchEvent(ev);
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+	</fx:Declarations>
+	<s:Rect width="100%" height="100%">
+		<s:fill>
+			<s:SolidColor color="#464F59"/>
+		</s:fill>
+	</s:Rect>
+	<s:BorderContainer y="132" width="663" height="296" backgroundColor="#464F59" borderWeight="4"
+					   cornerRadius="5" horizontalCenter="0">
+		<components:TextInputCustom id="txtUser" prompt="User" img="assets/img/userIcon1.png" y="97" fontSize="20" color="#333333" left="200" right="200" skinClass="assets.skins.TextInputLoginSkin"/>
+		<components:TextInputCustom id="txtPass" prompt="Password" img="assets/img/candado.png" y="141" fontSize="20" color="#333333" left="200" right="200" skinClass="assets.skins.TextInputLoginSkin" displayAsPassword="true"/>
+		<s:Button y="189" left="200" right="200" height="45" label="LOGIN"
+				  fontFamily="Georgia" fontSize="16" click="fnLogin(event)"/>
+		<s:CheckBox x="200" y="242" label="Guardar contraseña"/>
+	</s:BorderContainer>
+	<s:Image y="86" width="112" height="89" horizontalCenter="0"
+			 source="@Embed('assets/img/login2.png')"/>
+</s:NavigatorContent>

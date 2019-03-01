@@ -10,6 +10,8 @@ package events
 		public static const ELIMINAR:String = 'deleteMovimiento';
 		public static const LISTAR_FORMA_PAGO:String = 'fnFormaPago';
 		public static const PERIODO_ANTERIOR:String = 'getCierrePeriodo';
+		public static const MOVIMIENTOS_ASOCIADOS:String = 'fnMovimientosAsociados';
+		public static const MOVIMIENTOS_DEPENDIENTES:String = 'fnMovimientosDependientes';
 		
 		public var movVO:*;
 		public var filtros:Object;

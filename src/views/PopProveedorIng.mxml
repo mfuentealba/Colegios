@@ -11,7 +11,9 @@
 			
 			import modelo.ModelApp;
 			
+			import mx.controls.Alert;
 			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
 			import mx.managers.PopUpManager;
 			
 			import vo.ProveedorVO;
@@ -24,20 +26,100 @@
 				PopUpManager.removePopUp(this);
 			}
 			
+			protected function fnValidaRut(rut:String, dig:String):Boolean{
+				// Definicion de Variables Utilizadas
+				var suma:int=0;
+				var numMag:int=2;
+				var resto:int=0;
+				var i:int;
+				
+				// Defino el arreglo con los posibles digitos verificadores
+				var digVer:Array = new Array("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "K", "0");
+				var parteNumerica:Array = new Array();
+				
+				
+				parteNumerica = rut.split('');
+				
+				
+				// Calcula el digito verificador del rut
+				for (i = parteNumerica.length-1; i >= 0; i--, numMag++)
+				{
+					suma += parteNumerica[i] * numMag;
+					if (numMag > 6)
+					{
+						numMag = 1;
+					}
+				}
+				// Esto arroja el valor que debe tener el digito verificador
+				resto = 11-(suma%11);            
+				//Alert.show("resto-->"+resto+" || digVer[resto]-->"+digVer[resto]);
+				
+				if(digVer[resto] == dig.toUpperCase())
+				{
+					return true;
+				}
+				
+				return false;
+			}
+			
+			private var evIngresar:ProveedoresEvent;
+			private var dat:String;
 			protected function fnGuardar(event:MouseEvent):void
 			{
 				// TODO Auto-generated method stub
+				prov.rut = txtRut.text + '-' + txtDig.text;
+				if(fnValidaRut(txtRut.text, txtDig.text)){
+					evIngresar = new ProveedoresEvent(ProveedoresEvent.CREAR_PROVEEDORES, prov);
+					evIngresar.callback = fnResult; 
+					Controller.getInstance().dispatchEvent(evIngresar);	
+				} else {
+					Alert.show("Rut incorrecto", 'Atención');
+				}
 				
-				var evIngresar:ProveedoresEvent = new ProveedoresEvent(ProveedoresEvent.CREAR_PROVEEDORES, prov);
-				evIngresar.callback = fnResult; 
-				Controller.getInstance().dispatchEvent(evIngresar);
 				
 			}
 			
 			private function fnResult(obj:*):void{
-				modelApp.arrProveedor.addItem(obj);
-				modelApp.objProveedor[obj.id + ''] = obj;
-				PopUpManager.removePopUp(this);
+				
+				if(obj is String){
+					dat = obj;
+					Alert.show('Proveedor ingresado anteriormente, ¿Desea actualizar el nombre del proveedor?', 'Atención', Alert.OK|Alert.NO, null, fnReenvio);
+				} else {
+					modelApp.arrProveedor.addItem(obj);
+					modelApp.objProveedor[obj.id + ''] = obj;
+					PopUpManager.removePopUp(this);
+				}
+				
+			}
+			
+			private function fnResultUpdate(obj:*):void{
+				
+				if(obj is String){
+					dat = obj;
+					Alert.show('Proveedor ingresado anteriormente, ¿Desea actualizar el nombre del proveedor?', 'Atención', Alert.OK|Alert.NO, null, fnReenvio);
+				} else {
+					
+					modelApp.objProveedor[obj.id + '']['nombre'] = obj.nombre;
+					modelApp.arrProveedor.setItemAt(modelApp.objProveedor[obj.id + ''], modelApp.arrProveedor.getItemIndex(modelApp.objProveedor[obj.id + '']));
+					PopUpManager.removePopUp(this);
+				}
+				
+			}
+			
+			private function fnReenvio(ev:CloseEvent):void{
+				if(ev.detail == Alert.OK){
+					prov.id = Number(dat);
+					evIngresar = new ProveedoresEvent(ProveedoresEvent.ACTUALIZAR_PROVEEDORES, prov);
+					evIngresar.callback = fnResultUpdate; 
+					evIngresar.sw = true;
+					Controller.getInstance().dispatchEvent(evIngresar);
+				}
+			}
+			
+			protected function txtRut_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				txtRut.restrict = '/\b\d{1,8}\-[K|k|0-9]/';
 			}
 			
 		]]>
@@ -46,11 +128,15 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 		
 	</fx:Declarations>
-	<fx:Binding source="txtRut.text" destination="prov.rut" twoWay="true"/>
-	<fx:Binding source="txtNombre.text" destination="prov.nombre" twoWay="true"/>
-	<s:Form left="20" right="20" top="5" height="119">
+	
+	<fx:Binding source="txtNombre.text" destination="prov.nombre"/>
+	<s:Form left="20" right="20" top="5" height="119" color="#000000">
 		<s:FormItem label="Rut">
-			<s:TextInput id="txtRut"/>
+			<s:HGroup>
+				<s:TextInput id="txtRut" restrict="0-9" maxChars="8"/>
+				<s:TextInput id="txtDig" width="20" restrict="0-9 k" maxChars="1"/>
+			</s:HGroup>
+			
 		</s:FormItem>
 		<s:FormItem label="Nombre">
 			<s:TextInput id="txtNombre"/>

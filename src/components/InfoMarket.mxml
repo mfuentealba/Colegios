@@ -2,6 +2,32 @@
 <s:HGroup xmlns:fx="http://ns.adobe.com/mxml/2009"
 		  xmlns:s="library://ns.adobe.com/flex/spark"
 		  xmlns:mx="library://ns.adobe.com/flex/mx" gap="0" minWidth="300">
+	
+	<fx:Script>
+		<![CDATA[
+			import modelo.ModelApp;
+			
+			import mx.core.FlexGlobals;
+			import mx.managers.PopUpManager;
+			
+			import views.IngresoMovimiento;
+			
+			
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			protected function btn_clickHandler(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var pop:IngresoMovimiento = new IngresoMovimiento();
+				pop.esSaldo = true;
+				pop.currentState = 'saldo';
+				pop.movVO = modelApp.periodo;
+				pop.fnPost = FlexGlobals.topLevelApplication.viewGeneral.fnBuscar;
+				PopUpManager.addPopUp(pop, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(pop);
+			}
+		]]>
+	</fx:Script>
+	
 	<fx:Declarations>
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
@@ -29,9 +55,10 @@
 	<fx:Binding source="saldo" destination="fnColor"/>
 	<s:Label id="lblTexto" text="{texto}" color="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="20%" fontWeight="bold" height="100%"/>
 	<s:Label text="Saldo Caja: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblQty" text="{saldo}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
+	<s:Label id="lblQty" text="{modelApp.nf.formatNumber(Number(saldo))}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
 	<s:Label text="Deuda: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblPx" text="{deuda}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
+	<s:Label id="lblPx" text="{modelApp.nf.formatNumber(Number(deuda))}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
 	<s:Label text="Resultado: " backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" color="#666666" width="13%" height="100%"/>
-	<s:Label id="lblResultado" text="{resultado}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
+	<s:Label id="lblResultado" text="{modelApp.nf.formatNumber(Number(resultado))}" backgroundColor="#dddddd" paddingBottom="10" paddingLeft="10" paddingRight="10" paddingTop="10" width="27%" height="100%"/>
+	<s:Button id="btn" click="btn_clickHandler(event)" label="Actualizar" height="100%"/>
 </s:HGroup>

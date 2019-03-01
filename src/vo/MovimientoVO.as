@@ -30,7 +30,8 @@ package vo
 		public var saldoCaja:int = 0;
 		public var deudaAcum:int = 0;
 		public var resultado:int = 0;
-		
+		public var asociado:int = 0;
+		public var pago:int = 0;
 		/*
 		public var compromiso:CompromisoVO;
 		public var arrPagos:Array;

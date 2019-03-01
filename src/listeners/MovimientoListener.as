@@ -13,6 +13,7 @@ package listeners
 	import modelo.ModelApp;
 	
 	import mx.collections.ArrayCollection;
+	import mx.controls.Alert;
 	import mx.rpc.IResponder;
 	import mx.rpc.events.ResultEvent;
 	import mx.rpc.remoting.RemoteObject;
@@ -62,6 +63,14 @@ package listeners
 					rmtObjMovimiento.getCierrePeriodo(evento.filtros.fecha);
 					
 					break;
+				case MovimientoEvent.MOVIMIENTOS_ASOCIADOS:
+					rmtObjMovimiento.fnMovimientosAsociados(evento.filtros.tipo);
+					
+					break;
+				case MovimientoEvent.MOVIMIENTOS_DEPENDIENTES:
+					rmtObjMovimiento.fnMovimientosDependientes(evento.filtros.id);
+					
+					break;
 				
 			}
 		}
@@ -91,15 +100,31 @@ package listeners
 					modelApp.arrMovimiento.source.forEach(fnDictFormaPago);
 					break;
 				case MovimientoEvent.PERIODO_ANTERIOR:
-					if(data.result == null){
-						evento.callback.call(null, evento.filtros.fecha);
+					if(data.result && data.result.id == 0){
+						evento.callback.call(null, evento.filtros.fecha, data.result);
 					} else {
 						modelApp.periodo = data.result as MovimientoSaldoVO;
 						modelApp.saldoCaja = data.result.saldo_caja;
 						modelApp.deuda = data.result.deuda_acumulada;
 						modelApp.resultado = data.result.resultado;
-						var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, {periodo: Number(modelApp.periodo.id) + 1});
+						var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.LISTAR, null, null, {periodo: evento.filtros.periodo});
 						Controller.getInstance().dispatchEvent(ev);
+					}
+					break;
+				case MovimientoEvent.MOVIMIENTOS_ASOCIADOS:
+					if(data.result != null){
+						var arr:ArrayCollection = new ArrayCollection(data.result as Array);// as ArrayCollection;
+						evento.callback.call(null, arr);
+					} else {
+						Alert.show("No se han encontrado movimiento", 'Info');
+					}
+					break;
+				case MovimientoEvent.MOVIMIENTOS_DEPENDIENTES:
+					if(data.result != null){
+						arr = new ArrayCollection(data.result as Array);// as ArrayCollection;
+						evento.callback.call(null, arr);
+					} else {
+						Alert.show("No se han encontrado movimiento", 'Info');
 					}
 					break;
 			}

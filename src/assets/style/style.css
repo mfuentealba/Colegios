@@ -16,6 +16,17 @@ global
 }
 
 
+mx|Alert{
+	color:#333333;
+	
+}
+
+mx|Alert mx|Button{
+	color:#cccccc;
+	
+}
+
+
 s|DataGrid{
 	skinClass:ClassReference("assets.skins.GridTemaSkin")
 }
@@ -28,24 +39,41 @@ s|TitleWindow
 	cornerRadius: 9;
 	dropShadowVisible: true;
 	backgroundColor: #ffffff;
-	color: #000000;
+	color: #eeeeee;
 	
 	
 	
 }
 
 s|TitleWindow s|Button{
-	color:#000000;	
+	color:#ffffff;	
 	/*skinClass:ClassReference("assets.skins.ButtonSendLVSkin");*/
 }
 
+
+
 s|TitleWindow s|ComboBox{
 	borderColor: #333333;
-	skinClass:ClassReference("spark.skins.spark.ComboBoxSkin")
+	
+	
+}
+
+s|TitleWindow s|Form{
+	color: #333333;
+	
+	
+}
+
+s|DropDownList{
+	color:#000000;
+}
+
+s|VGroup{
+	color:#222222
 }
 
 s|ComboBox{
-	skinClass:ClassReference("assets.skins.ComboBoxLVNoEditSkin");
+	skinClass:ClassReference("assets.skins.ComboCustomNoEditSkin");
 	chromeColor: #ffffff;
 	color: #333333;
 }

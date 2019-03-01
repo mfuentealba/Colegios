@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="800" height="400" title="Seleccione Movimiento" close="fnCerrar(event)">
+	<fx:Script>
+		<![CDATA[
+			import modelo.ModelApp;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TextInput;
+			
+			import vo.MovimientoVO;
+			
+			public var seleccionado:TextInput;
+			public var objSelect:Object;
+			
+			public var ing:IngresoMovimiento;
+			
+			protected function fnGuardar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				if(dg.selectedItem){
+					seleccionado.text = dg.selectedItem.id;
+					objSelect.id = dg.selectedItem.id;
+					objSelect.saldo = dg.selectedItem.saldo;
+					var modelApp:ModelApp = ModelApp.getInstance()
+					ing.txtGlosa.text = dg.selectedItem.glosa;
+					ing.txtDocto.text = dg.selectedItem.nro_doc;
+					ing.ddTipoDoc.selectedItem =modelApp.objTipoDocumento[dg.selectedItem.tipo_documento];
+					ing.cbProveedor.selectedItem = modelApp.objProveedor[dg.selectedItem.id_proveedor];
+					
+					PopUpManager.removePopUp(this);
+					
+				} else {
+					Alert.show("Seleccione un movimiento de la grilla", "Atención");
+				}
+			}
+			
+			protected function fnCerrar(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" paddingBottom="5" paddingLeft="5" paddingRight="5"/>
+	</s:layout>
+	<s:DataGrid id="dg" height="100%" width="100%" requestedRowCount="4" >
+		<s:columns>
+			<s:ArrayList>
+				<s:GridColumn dataField="glosa" headerText="Glosa"></s:GridColumn>
+				<s:GridColumn dataField="saldo" headerText="Monto"></s:GridColumn>
+				
+			</s:ArrayList>
+		</s:columns>
+		
+	</s:DataGrid>
+	<s:Button y="136" width="113" height="31" label="OK" fontWeight="bold" horizontalCenter="0" click="fnGuardar(event)"/>
+	
+</s:TitleWindow>

@@ -5,6 +5,7 @@
 	
 	<fx:Script>
 		<![CDATA[
+			import modelo.ModelApp;
 			
 			import mx.containers.Grid;
 			
@@ -13,6 +14,8 @@
 			
 			private const VERDE:uint = 0x04B404;				
 			private const ROJO:uint = 0xFF0000;
+			
+			[Bindable]private var detalle:Number = 0;
 			
 			override public function prepare(hasBeenRecycled:Boolean):void {
 				super.updateDisplayList(unscaledWidth, unscaledHeight);
@@ -36,32 +39,43 @@
 			override public function set data(data:Object):void        
 			{             
 				super.data = data;
-				
+				var modelApp:ModelApp = ModelApp.getInstance();
 				if(data)
 				{
 					switch(column.headerText){
 						case 'Ing. Dev.':
 							if(data.tipo_movimiento == 2 || data.tipo_movimiento == 6){
-								lblData.text = data.monto + '';
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
+							} else {
+								lblData.text = '';
 							}
 							break;
 						case 'Gastos':
 							if(data.tipo_movimiento == 3){
-								lblData.text = data.monto + '';
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
+								
+							} else {
+								lblData.text = '';
 							}
 							break;
 						case 'Pagos':
 							if(data.tipo_movimiento == 4 || data.tipo_movimiento == 5){
-								lblData.text = data.monto + '';
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
+							} else {
+								lblData.text = '';
 							}
 							break;
 						case 'Deuda Mes':
 							if(data.tipo_movimiento == 4){
-								lblData.text = (-data.monto) + '';
+								lblData.text = (modelApp.nf.formatNumber(-data.monto)) + '';
 							} else if(data.tipo_movimiento == 6){
-								lblData.text = data.monto + '';
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
 							} else if(data.tipo_movimiento == 7){
-								lblData.text = data.monto + '';
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
+							} else if(data.tipo_movimiento == 3){
+								lblData.text = modelApp.nf.formatNumber(data.monto) + '';
+							} else {
+								lblData.text = '';
 							}
 							break;
 						case 'Tipo Movimiento':
@@ -94,10 +108,19 @@
 							lblData.text = data.financiamiento ? data.financiamiento.descripcion : '';
 							break;
 						default:
-							lblData.text = data[column.dataField] + '';	
+							if(isNaN(data[column.dataField])){
+								lblData.text = data[column.dataField] + '';
+							} else {
+								lblData.text = modelApp.nf.formatNumber(data[column.dataField]);
+							}
+								
 					}
 					
-					
+					if(data.asociado != 0){
+						detalle = .4;
+					} else {
+						detalle = 0;
+					}
 					
 				}
 			}
@@ -133,6 +156,12 @@
 	</fx:Script>
 	
 	<s:Group minHeight="35" width="100%">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="GREEN" alpha="{detalle}"/>
+			</s:fill>
+			
+		</s:Rect>
 		<s:Label id="lblData" horizontalCenter="0" verticalCenter="0"/>
 		<s:Image id="img" horizontalCenter="0" verticalCenter="0"/>	
 	</s:Group>

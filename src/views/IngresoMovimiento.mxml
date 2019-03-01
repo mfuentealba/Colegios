@@ -2,9 +2,10 @@
 <s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
 			   xmlns:s="library://ns.adobe.com/flex/spark"
 			   xmlns:mx="library://ns.adobe.com/flex/mx"
-			   width="400" height="542" close="fnCerrar(event)" creationComplete="fnIni(event)"
-			   currentState="inicial" title="Ingreso de Movimiento" title.saldo="Ingrese saldo anterior"
-			   height.saldo="292" keyUp="fnSalir(event)">
+			   width="600" height="542" close="fnCerrar(event)" creationComplete="fnIni(event)"
+			   currentState="inicial" keyUp="fnSalir(event)" title="Ingreso de Movimiento"
+			   height.inicial="626"
+			   height.saldo="292" title.saldo="Ingrese saldo anterior">
 	<fx:Script>
 		<![CDATA[
 			import controlador.Controller;
@@ -28,15 +29,19 @@
 			import vo.MovimientoVO;
 			
 			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
-			[Bindable] public var movVO:MovimientoVO;
+			[Bindable] public var movVO:*;
 			[Bindable] public var esSaldo:Boolean;
+			[Bindable] public var asoc:Boolean;
 			public var fnPost:Function;
 			public var fnBotonEjecuta:Function;
 			[Bindable] private var txtLeyenda:String = 'Monto';
 			[Bindable] public var fp:Boolean;
 			[Bindable] public var fecha:String;
-			
+			public var objSelect:Object = {};
 			[Bindable] private var arrYears:Array = [{label: 2016, data: 2016}, {label: 2017, data: 2017}, {label: 2018, data: 2018}, {label: 2019, data: 2019}, {label: 2020, data: 2020}, {label: 2021, data: 2021}, {label: 2022, data: 2022}, {label: 2023, data: 2023}];
+			private var objPre:MovimientoVO;
+			
+			
 			
 			protected function fnCerrar(event:CloseEvent = null):void
 			{
@@ -62,22 +67,92 @@
 			
 			protected function fnGrabarMov(event:MouseEvent):void
 			{
+				
+				
+				
+				
+				
 				if(event.target.label == 'Grabar'){
 					fnBotonEjecuta = fnCerrar;
 				} else {
 					fnBotonEjecuta = fnLimpiar;
 				}
 				if(currentState == 'saldo'){
+					if(txtMonto.text == ""){
+						Alert.show("Debe ingresar un monto", "Atención");
+						return;
+					}
+					
+					
+					if(txtMonto0.text == ''){
+						Alert.show("Debe ingresar Deuda Acumulada", "Atención");
+						return;
+					}
+					
+					if(txtMonto1.text == ''){
+						Alert.show("Debe ingresar Resultado Neto", "Atención");
+						return;
+					}
 					var saldo:MovimientoSaldoVO = new MovimientoSaldoVO();
 					saldo.id = txtPeriodo.text;
-					saldo.saldo_caja = Number(txtMonto.text);
-					saldo.deuda_acumulada = Number(txtMonto0.text);
-					saldo.resultado = Number(txtMonto1.text);
+					saldo.saldo_caja = Number(txtMonto.text.split('.').join(''));
+					saldo.deuda_acumulada = Number(txtMonto0.text.split('.').join(''));
+					saldo.resultado = Number(txtMonto1.text.split('.').join(''));
 					var evGrabarMov:MovimientoEvent = new MovimientoEvent(MovimientoEvent.CREAR_SALDO, fnCreado, saldo);
 					Controller.getInstance().dispatchEvent(evGrabarMov);	
 					
 				} else {
 					var mov:MovimientoVO = new MovimientoVO();
+					
+					
+					if(!ddTipoMov.selectedItem){
+						Alert.show("Debe seleccionar tipo de movimiento", "Atención");
+						return;
+					}
+					
+					if(!dfFecMov.text){
+						Alert.show("Debe seleccionar Fecha del movimiento", "Atención");
+						return;
+					}	
+					if(txtGlosa.text == ''){
+						Alert.show("Debe seleccionar Fecha del movimiento", "Atención");
+						return;
+					}
+
+
+					if(!ddTipoDoc.selectedItem){
+						Alert.show("Debe seleccionar tipo de documento", "Atención");
+						return;
+					}
+					
+					if(!cbProveedor.selectedItem){
+						Alert.show("Debe seleccionar proveedor", "Atención");
+						return;
+					}
+					
+					if(gFinanciamiento.visible == true && !ddFuenteFinanciera.selectedItem){
+						Alert.show("Debe seleccionar fuente financiera", "Atención");
+						return;
+					}
+					
+					if(txtMonto.text == ""){
+						Alert.show("Debe ingresar un monto", "Atención");
+						return;
+					}
+					
+					if(fp && !ddFormaPago.selectedItem){
+						Alert.show("Debe seleccionar forma de pago", "Atención");	
+						return;
+					}	
+
+					
+					if(objSelect.saldo){
+						if(Number(objSelect.saldo) < Number(txtMonto.text.split('.').join('')) && Number(objSelect.saldo) > 0){
+							Alert.show("El movimiento que está ingresando supera la deuda del monto asociado. Actualice monto para poder registrar", 'Atención');
+							return;
+						} 
+					}
+					
 					mov.id = movVO.id;
 					mov.glosa = txtGlosa.text;
 					mov.fec_mvto = dfFecMov.text;
@@ -86,11 +161,16 @@
 					mov.nro_doc = int(txtDocto.text);
 					mov.id_proveedor = int(cbProveedor.selectedItem.id);
 					mov.id_fuente_financiera = ddFuenteFinanciera.selectedItem ? ddFuenteFinanciera.selectedItem.id : null;
-					mov.monto = int(txtMonto.text);
+					mov.monto = int(txtMonto.text.split('.').join(''));
 					mov.cod_cuenta = txtCodCuenta.text;
 					mov.cod_contable = txtCodContable.text;
 					mov.periodo = txtPeriodo.text;
-					mov.user = 'Prueba';
+					mov.asociado = txtAsociado.text == '' ? 0 : Number(txtAsociado.text);
+					mov.user = modelApp.userVO.user;
+					if(ddTipoMov.selectedItem.id == 3){
+						mov.pago = txtPago.text == '' ? 0 : Number(txtPago.text);	
+					}
+					
 					evGrabarMov = new MovimientoEvent(MovimientoEvent.CREAR, fnCreado, mov);
 					Controller.getInstance().dispatchEvent(evGrabarMov);	
 				}
@@ -103,6 +183,13 @@
 					Alert.show(obj, "Error de registro");
 					return;
 				} 
+				if(esSaldo){
+					modelApp.periodo = obj;
+					modelApp.saldoCaja = modelApp.periodo.saldo_caja;
+					modelApp.deuda = modelApp.periodo.deuda_acumulada;
+					modelApp.resultado = modelApp.periodo.resultado;	
+				}
+				
 				fnPost.call(null);
 				fnBotonEjecuta.call(null);
 				
@@ -133,19 +220,31 @@
 					}
 					
 				} else {
-					btnSecundario.visible = false;
+					if(esSaldo){
+						txtPeriodo.text = modelApp.periodo.id;
+						txtMonto.text = modelApp.nf.formatNumber(modelApp.periodo.saldo_caja) + '';
+						txtMonto0.text = modelApp.nf.formatNumber(modelApp.periodo.deuda_acumulada) + '';
+						txtMonto1.text = modelApp.nf.formatNumber(modelApp.periodo.resultado) + '';
+					} else {
+						btnSecundario.visible = false;
+						
+						txtGlosa.text = movVO.glosa;
+						dfFecMov.text = movVO.fec_mvto;
+						ddTipoMov.selectedItem = modelApp.objTipoMovimiento[movVO.tipo_movimiento];
+						ddTipoDoc.selectedItem = modelApp.objTipoDocumento[movVO.tipo_documento];
+						txtDocto.text = movVO.nro_doc + '';
+						cbProveedor.selectedItem = modelApp.objProveedor[movVO.id_proveedor];
+						ddFuenteFinanciera.selectedItem = modelApp.objFinanciamiento[movVO.id_fuente_financiera];
+						txtMonto.text = modelApp.nf.formatNumber(movVO.monto) + '';
+						txtCodCuenta.text = movVO.cod_cuenta;
+						txtCodContable.text = movVO.cod_contable;
+						txtPeriodo.text = movVO.periodo;	
+						txtAsociado.text = movVO.asociado + '';
+						if(movVO.tipo_movimiento == 3 || movVO.tipo_movimiento == 4){
+							asoc = true;
+						}
+					}
 					
-					txtGlosa.text = movVO.glosa;
-					dfFecMov.text = movVO.fec_mvto;
-					ddTipoMov.selectedItem = modelApp.objTipoMovimiento[movVO.tipo_movimiento];
-					ddTipoDoc.selectedItem = modelApp.objTipoDocumento[movVO.tipo_documento];
-					txtDocto.text = movVO.nro_doc + '';
-					cbProveedor.selectedItem = modelApp.objProveedor[movVO.id_proveedor];
-					ddFuenteFinanciera.selectedItem = modelApp.objFinanciamiento[movVO.id_fuente_financiera];
-					txtMonto.text = movVO.monto + '';
-					txtCodCuenta.text = movVO.cod_cuenta;
-					txtCodContable.text = movVO.cod_contable;
-					txtPeriodo.text = movVO.periodo;
 				}
 				
 				
@@ -161,6 +260,13 @@
 				if(event.newIndex == 0 || event.newIndex == 1 || event.newIndex == 4){
 					gFinanciamiento.visible = true;
 					gFinanciamiento.includeInLayout = true;
+					if(event.newIndex == 1){
+						gPago.visible = true;
+						gPago.includeInLayout = true;
+					} else {
+						gPago.visible = false;
+						gPago.includeInLayout = false;
+					}
 				} else {
 					gFinanciamiento.visible = false;
 					gFinanciamiento.includeInLayout = false;
@@ -177,38 +283,45 @@
 					case 0:
 						txtLeyenda = 'Ingreso o Entrada, de $$$';
 						fp = false;
+						asoc = false;
 						currentState = 'inicial';
 						
 						break;
 					case 1:
 						txtLeyenda = 'Gasto Efectuado';
 						fp = false;
+						asoc = true;
 						currentState = 'inicial';
 						break;
 					case 2:
 						txtLeyenda = 'Pago de Gasto o Deuda';
 						currentState = 'inicial';
+						asoc = true;
 						fp = true;
 						break;
 					case 3:
 						txtLeyenda = 'Egreso de Dineros';
 						currentState = 'inicial';
+						asoc = false;
 						fp = true;
 						break;
 					case 4:
 						txtLeyenda = 'Ingr. por Prestamo o Aporte Provisorio';
 						fp = false;
+						asoc = false;
 						currentState = 'inicial';
 						break;
 					case 5:
 						txtLeyenda = 'Retenciones Adeudadas';
 						fp = false;
+						asoc = false;
 						currentState = 'inicial';
 						break;
 					
 					default:
 						txtLeyenda = 'Monto';
 						fp = false;
+						asoc = false;
 						currentState = 'inicial';
 				}
 			}
@@ -244,6 +357,39 @@
 				}
 			}
 			
+			protected function fnAsociacionResult(arr:ArrayCollection):void
+			{
+				// TODO Auto-generated method stub
+				
+				var pop:PopAsociacion = new PopAsociacion();
+				pop.seleccionado = this.txtAsociado;
+				pop.objSelect = objSelect;
+				pop.ing = this;
+				PopUpManager.addPopUp(pop, FlexGlobals.topLevelApplication as DisplayObject, true);
+				PopUpManager.centerPopUp(pop);
+				pop.dg.dataProvider = arr;
+			}
+			
+			protected function fnAsociacion(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				
+				var ev:MovimientoEvent = new MovimientoEvent(MovimientoEvent.MOVIMIENTOS_ASOCIADOS, fnAsociacionResult, null, {tipo: ddTipoMov.selectedItem.id == 3 ? 5 : 3});
+				Controller.getInstance().dispatchEvent(ev);
+			}
+			
+			protected function fnFormatoNumber(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				event.target.text = modelApp.nf.formatNumber(Number(event.target.text));
+			}
+			
+			protected function fnSinFormato(event:FocusEvent):void
+			{
+				// TODO Auto-generated method stub
+				event.target.text = String(event.target.text).split('.').join('');
+			}
+			
 		]]>
 	</fx:Script>
 	<s:states>
@@ -254,10 +400,15 @@
 		<!-- Place non-visual elements (e.g., services, value objects) here -->
 	</fx:Declarations>
 	
-	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="10" paddingRight="10" >
+	<s:VGroup top="0" bottom="0" left="0" right="0" horizontalAlign="center" paddingTop="20" paddingLeft="100" paddingRight="100" >
 		<s:Group includeIn="inicial" width="100%" height="23">
 			<s:Label text="Tipo de Movimiento" verticalCenter="0"/>
 			<s:ComboBox id="ddTipoMov" dataProvider="{modelApp.arrTipoMovimiento}" labelField="descripcion" width="155" right="0" change="fnLeyendaMonto(event)"/>
+		</s:Group>
+		<s:Group includeIn="inicial" width="100%" height="23" visible="{asoc}" includeInLayout="{asoc}">
+			<s:Label text="Asociar Movimiento" verticalCenter="0"/>
+			<s:TextInput id="txtAsociado" width="109" right="46" editable="false"/>
+			<s:Button label="+" right="0" width="40" click="fnAsociacion(event)"/>
 		</s:Group>
 		<s:Group includeIn="inicial" width="100%" height="23">
 			<s:Label text="Fecha Movimiento" verticalCenter="0"/>
@@ -285,11 +436,11 @@
 		
 		<s:Group includeIn="inicial" width="100%" height="23">
 			<s:Label text="N° de Documento" verticalCenter="0"/>
-			<s:TextInput id="txtDocto" width="155" right="0"/>
+			<s:TextInput id="txtDocto" width="155" right="0" restrict="0-9"/>
 		</s:Group>
 		<s:Group includeIn="inicial" width="100%" height="23">
 			<s:Label text="Rut Proveedor" verticalCenter="0"/>
-			<s:ComboBox id="cbProveedor" width="109" right="46" dataProvider="{modelApp.arrProveedor}" labelField="rut" skinClass="assets.skins.ComboBoxLVSkin"/>
+			<s:ComboBox id="cbProveedor" width="109" right="46" skinClass="spark.skins.spark.ComboBoxSkin" dataProvider="{modelApp.arrProveedor}" labelField="rut"/>
 			<s:Button label="+" right="0" width="40" click="fnIngresarProveedor(event)"/>
 		</s:Group>
 		<s:Group includeIn="inicial" width="100%" height="23">
@@ -302,8 +453,12 @@
 		</s:Group>
 		<s:Group width="100%" height="23">
 			<s:Label text="{txtLeyenda}" verticalCenter="0"/>
-			<s:TextInput id="txtMonto" restrict="0-9" width="155" right="0"/>
+			<s:TextInput id="txtMonto" restrict="0-9" width="155" right="0" focusOut="fnFormatoNumber(event)" focusIn="fnSinFormato(event)"/>
 			
+		</s:Group>
+		<s:Group id="gPago" includeIn="inicial" width="100%" height="23" visible="false" includeInLayout="false">
+			<s:Label text="Agregar pago inicial" verticalCenter="0"/>
+			<s:TextInput id="txtPago" width="155" restrict="0-9" maxChars="9" right="0"/>
 		</s:Group>
 		<s:Group width="100%" height="23" visible="{fp}" includeInLayout="{fp}">
 			<s:Label text="Forma de Pago" verticalCenter="0"/>
@@ -312,16 +467,16 @@
 		</s:Group>
 		<s:Group includeIn="saldo" width="100%" height="23">
 			<s:Label text="Deuda Acumulada" verticalCenter="0"/>
-			<s:TextInput id="txtMonto0" restrict="0-9" width="155" right="0"/>
+			<s:TextInput id="txtMonto0" restrict="0-9" width="155" right="0" focusOut="fnFormatoNumber(event)" focusIn="fnSinFormato(event)"/>
 			
 		</s:Group>
 		<s:Group includeIn="saldo" width="100%" height="23">
 			<s:Label text="Resultado Neto" verticalCenter="0"/>
-			<s:TextInput id="txtMonto1" restrict="0-9" width="155" right="0"/>
+			<s:TextInput id="txtMonto1" restrict="0-9" width="155" right="0" focusOut="fnFormatoNumber(event)" focusIn="fnSinFormato(event)"/>
 		</s:Group>
 				
 		<s:Group includeIn="inicial" width="100%" height="23">
-			<s:Label text="Cod Cuenta" verticalCenter="0"/>
+			<s:Label text="Cod Cuenta Mineduc" verticalCenter="0"/>
 			<s:TextInput id="txtCodCuenta" width="155" restrict="0-9" maxChars="9" right="0"/>
 		</s:Group>
 		
@@ -329,8 +484,10 @@
 			<s:Label text="Cod contable" verticalCenter="0"/>
 			<s:TextInput id="txtCodContable" width="155" restrict="0-9" maxChars="9" right="0"/>
 		</s:Group>
+		
 		<s:Group width="100%" height="50"
-				 height.inicial="100%">
+				 height.inicial="100%"
+				 height.saldo="100%">
 			<s:Button label="Grabar" width="50%" left="0" height="50" bottom="10" click="fnGrabarMov(event)"/>
 			<s:Button id="btnSecundario" includeIn="inicial" width="50%" bottom="10" right="0" height="50" label="Guardar e Ingresar Otro" click="fnGrabarMov(event)"/>
 			

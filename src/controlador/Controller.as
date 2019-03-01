@@ -3,20 +3,24 @@ package controlador
 	import com.adobe.serialization.json.JSON;
 	
 	import events.FinanciamientoEvent;
+	import events.GenerarPlanillasEvent;
 	import events.MovimientoEvent;
 	import events.ProveedoresEvent;
 	import events.TipoDocumentoEvent;
 	import events.TipoMovimientoEvent;
+	import events.UserEvent;
 	
 	import flash.events.DataEvent;
 	import flash.events.EventDispatcher;
 	import flash.events.IEventDispatcher;
 	
 	import listeners.FinanciamientoListener;
+	import listeners.GenerarPlanillasListener;
 	import listeners.MovimientoListener;
 	import listeners.ProveedorListener;
 	import listeners.TipoDocumentoListener;
 	import listeners.TipoMovimientoListener;
+	import listeners.UserListener;
 	
 	import modelo.ModelApp;
 	
@@ -55,6 +59,7 @@ package controlador
 			addEventListenerNew(TipoMovimientoEvent.LISTAR, TipoMovimientoListener);
 			addEventListenerNew(ProveedoresEvent.LISTAR_PROVEEDORES, ProveedorListener);
 			addEventListenerNew(ProveedoresEvent.CREAR_PROVEEDORES, ProveedorListener);
+			addEventListenerNew(ProveedoresEvent.ACTUALIZAR_PROVEEDORES, ProveedorListener);
 			addEventListenerNew(TipoDocumentoEvent.LISTAR, TipoDocumentoListener);
 			addEventListenerNew(MovimientoEvent.LISTAR, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.CREAR, MovimientoListener);
@@ -62,7 +67,12 @@ package controlador
 			addEventListenerNew(MovimientoEvent.LISTAR_FORMA_PAGO, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.ELIMINAR, MovimientoListener);
 			addEventListenerNew(MovimientoEvent.PERIODO_ANTERIOR, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.MOVIMIENTOS_ASOCIADOS, MovimientoListener);
+			addEventListenerNew(MovimientoEvent.MOVIMIENTOS_DEPENDIENTES, MovimientoListener);
 			addEventListenerNew(FinanciamientoEvent.LISTAR, FinanciamientoListener);
+			addEventListenerNew(UserEvent.LOGIN, UserListener);
+			addEventListenerNew(UserEvent.CAMBIO_PASS, UserListener);
+			addEventListenerNew(GenerarPlanillasEvent.GENERAR_PLANILLAS, GenerarPlanillasListener);
 			
 		}	
 		

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:TitleWindow xmlns:fx="http://ns.adobe.com/mxml/2009"
+			   xmlns:s="library://ns.adobe.com/flex/spark"
+			   xmlns:mx="library://ns.adobe.com/flex/mx"
+			   width="446" height="100" title="Seleccione Movimiento" close="fnCerrar(event)"
+			   backgroundColor="#666666">
+	<fx:Script>
+		<![CDATA[
+			import controlador.Controller;
+			
+			import events.GenerarPlanillasEvent;
+			
+			import modelo.ModelApp;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			import mx.managers.PopUpManager;
+			
+			import spark.components.TextInput;
+			
+			import vo.MovimientoVO;
+			
+			public var seleccionado:TextInput;
+			public var objSelect:Object;
+			
+			public var ing:IngresoMovimiento;
+			[Bindable] private var modelApp:ModelApp = ModelApp.getInstance();
+			
+			
+			
+			protected function fnCerrar(event:CloseEvent):void
+			{
+				// TODO Auto-generated method stub
+				PopUpManager.removePopUp(this);
+			}
+			
+			protected function cbYear_creationCompleteHandler(event:FlexEvent):void
+			{
+				// TODO Auto-generated method stub
+				var fecha:String = (new Date()).fullYear + '';
+				for each(var obj:Object in modelApp.arrYears){
+					if(obj.data == fecha){
+						cbYear.selectedItem = obj;
+					}
+				}
+			}
+			
+			protected function fnGenerar(event:MouseEvent):void
+			{
+				// TODO Auto-generated method stub
+				var evGenerarPlanillas:GenerarPlanillasEvent = new GenerarPlanillasEvent(GenerarPlanillasEvent.GENERAR_PLANILLAS, cbYear.selectedItem.data + '');
+				Controller.getInstance().dispatchEvent(evGenerarPlanillas);
+			}
+			
+		]]>
+	</fx:Script>
+	<fx:Declarations>
+		<!-- Place non-visual elements (e.g., services, value objects) here -->
+		
+	</fx:Declarations>
+	<s:layout>
+		<s:VerticalLayout horizontalAlign="center" paddingBottom="5" paddingLeft="5" paddingRight="5" paddingTop="5"/>
+	</s:layout>
+	<s:BorderContainer width="100%">
+		<s:layout>
+			<s:HorizontalLayout verticalAlign="middle" paddingLeft="10"/>
+		</s:layout>
+		<s:Label text="Año: "/>
+		<s:ComboBox id="cbYear" dataProvider="{new ArrayCollection(modelApp.arrYears)}" creationComplete="cbYear_creationCompleteHandler(event)"/>
+		<s:Button label="Generar" click="fnGenerar(event)"/>
+	</s:BorderContainer>
+	
+	
+	
+</s:TitleWindow>
